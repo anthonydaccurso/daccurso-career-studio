@@ -93,7 +93,10 @@ export default function ResumeServices() {
           `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/analyze-resume`,
           {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+            },
             body: JSON.stringify({
               resumeText: '',
               file_name: file.name,
@@ -102,6 +105,7 @@ export default function ResumeServices() {
             }),
           }
         );
+
 
         const data = await response.json();
         if (!response.ok) throw new Error(data.error || 'AI analysis failed.');
