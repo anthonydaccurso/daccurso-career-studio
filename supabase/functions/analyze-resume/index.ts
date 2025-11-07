@@ -2,37 +2,22 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import mammoth from "npm:mammoth";
 import pdfParse from "npm:pdf-parse";
 
-// Strict CORS whitelist for your exact frontend domain
-const ALLOWED_ORIGINS = [
-  "https://daccursocareerstudio.com",
-  "https://www.daccursocareerstudio.com",
-  "http://localhost:5173", // optional for local dev
-  "http://localhost:3000",
-];
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "https://daccursocareerstudio.com",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization, apikey, X-Client-Info",
+  "Access-Control-Max-Age": "86400",
+};
 
+// 1. Handle CORS preflight cleanly before anything else
 Deno.serve(async (req) => {
-  const origin = req.headers.get("origin") || "";
-  const allowOrigin = ALLOWED_ORIGINS.includes(origin)
-    ? origin
-    : "https://daccursocareerstudio.com";
-
-  const corsHeaders = {
-    "Access-Control-Allow-Origin": allowOrigin,
-    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-    "Access-Control-Allow-Headers":
-      "Content-Type, Authorization, X-Client-Info, apikey",
-    "Access-Control-Allow-Private-Network": "true",
-    "Access-Control-Max-Age": "86400",
-  };
-
-  // Return proper preflight response (required for Supabase)
   if (req.method === "OPTIONS") {
     return new Response("ok", { status: 200, headers: corsHeaders });
   }
 
   try {
+    // 2. Parse input
     const { file_name, file_data, file_size } = await req.json();
-
     if (!file_data) {
       return new Response(JSON.stringify({ error: "Missing file data." }), {
         status: 400,
@@ -40,11 +25,11 @@ Deno.serve(async (req) => {
       });
     }
 
-    // --- Decode base64 bytes
+    // 3. Decode base64
     const base64Data = file_data.split(",")[1];
     const fileBytes = Uint8Array.from(atob(base64Data), (c) => c.charCodeAt(0));
 
-    // --- Extract text
+    // 4. Extract text (DOCX / PDF)
     let resumeText = "";
     if (file_name.toLowerCase().endsWith(".pdf")) {
       const parsed = await pdfParse(fileBytes);
@@ -53,31 +38,27 @@ Deno.serve(async (req) => {
       const result = await mammoth.extractRawText({ buffer: fileBytes });
       resumeText = result.value;
     } else {
-      return new Response(
-        JSON.stringify({ error: "Only DOCX or PDF are supported." }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ error: "Only DOCX or PDF files supported." }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
     if (!resumeText || resumeText.trim().length < 50) {
-      return new Response(
-        JSON.stringify({ error: "File appears empty or unreadable." }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ error: "Extracted text too short or unreadable." }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
-    // --- AI feedback
-    const openaiApiKey = Deno.env.get("OPENAI_API_KEY");
-    const supabaseUrl = Deno.env.get("SUPABASE_URL");
-    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    // 5. AI feedback
+    const openaiKey = Deno.env.get("OPENAI_API_KEY");
+    if (!openaiKey) throw new Error("Missing OpenAI API key.");
 
-    if (!openaiApiKey || !supabaseUrl || !supabaseKey)
-      throw new Error("Missing environment variables.");
-
-    const aiRequest = await fetch("https://api.openai.com/v1/chat/completions", {
+    const aiRes = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${openaiApiKey}`,
+        Authorization: `Bearer ${openaiKey}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -86,11 +67,11 @@ Deno.serve(async (req) => {
           {
             role: "system",
             content:
-              "You are an expert resume reviewer. Provide professional, plain-text feedback without markdown formatting.",
+              "You are an expert resume reviewer. Provide detailed, professional feedback in plain text (no markdown).",
           },
           {
             role: "user",
-            content: `Analyze this resume and give feedback under:
+            content: `Analyze this resume under:
 1. Overall Impression (score)
 2. Formatting & Layout
 3. Content Quality
@@ -108,18 +89,22 @@ ${resumeText}`,
       }),
     });
 
-    if (!aiRequest.ok) {
-      const errText = await aiRequest.text();
-      console.error("OpenAI API error:", errText);
-      throw new Error("OpenAI request failed.");
+    if (!aiRes.ok) {
+      const err = await aiRes.text();
+      console.error("OpenAI API error:", err);
+      throw new Error("OpenAI API request failed.");
     }
 
-    const data = await aiRequest.json();
+    const data = await aiRes.json();
     const feedback = data?.choices?.[0]?.message?.content || "No feedback generated.";
 
-    // --- Upload file to feedback/feedback/
+    // 6. Save file + record
+    const supabaseUrl = Deno.env.get("SUPABASE_URL");
+    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    if (!supabaseUrl || !supabaseKey) throw new Error("Missing Supabase credentials.");
+
     const filePath = `feedback/${file_name}`;
-    const uploadRes = await fetch(`${supabaseUrl}/storage/v1/object/feedback/${filePath}`, {
+    const upload = await fetch(`${supabaseUrl}/storage/v1/object/feedback/${filePath}`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${supabaseKey}`,
@@ -129,14 +114,12 @@ ${resumeText}`,
       body: fileBytes,
     });
 
-    if (!uploadRes.ok) {
-      const errText = await uploadRes.text();
-      console.error("Upload failed:", errText);
+    if (!upload.ok) {
+      console.error("Upload failed:", await upload.text());
       throw new Error("Failed to upload to feedback bucket.");
     }
 
-    // --- Insert DB record
-    const insertRes = await fetch(`${supabaseUrl}/rest/v1/ai_resume_feedback`, {
+    const insert = await fetch(`${supabaseUrl}/rest/v1/ai_resume_feedback`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -153,19 +136,19 @@ ${resumeText}`,
       }),
     });
 
-    if (!insertRes.ok) {
-      const errText = await insertRes.text();
-      console.error("DB insert failed:", errText);
-      throw new Error("Failed to insert record into ai_resume_feedback.");
+    if (!insert.ok) {
+      console.error("Insert failed:", await insert.text());
+      throw new Error("Failed to insert feedback record.");
     }
 
+    // 7. Return success
     return new Response(JSON.stringify({ feedback }), {
       status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
-  } catch (error) {
-    console.error("Analyze Resume Error:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
+  } catch (err) {
+    console.error("Analyze Resume Error:", err);
+    return new Response(JSON.stringify({ error: err.message }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
