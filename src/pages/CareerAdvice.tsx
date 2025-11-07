@@ -18,7 +18,7 @@ export default function CareerAdvice() {
         <meta property="og:description" content="Explore expert articles on job searching, interviewing, and professional development." />
         <meta
           property="og:image"
-          content="https://bvevrurqtidadhfsuoee.supabase.co/storage/v1/object/public/media/dcs-apple-touch-icon.png"
+          content="https://nkrnbtythzdnogvtdizv.supabase.co/storage/v1/object/public/media/dcs-apple-touch-icon.png"
         />
 
         {/* Career Strategy Consultation Service Schema */}
