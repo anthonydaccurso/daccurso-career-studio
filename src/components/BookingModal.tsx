@@ -26,19 +26,23 @@ export default function BookingModal({ isOpen, onClose, serviceType }: BookingMo
     setIsSubmitting(true);
     setSubmitMessage('');
 
-  const { error } = await supabase
-    .from('booking_submissions')
-    .insert([
-      {
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-        service_type: serviceType,
-        desired_date: formattedDate, // formatted properly
-        desired_time: formData.desiredTime,
-        status: 'new', // optional but good practice
-      },
-    ]);
+    try {
+      // Format date to YYYY-MM-DD for Supabase
+      const formattedDate = new Date(formData.desiredDate).toISOString().split('T')[0];
+
+      const { error } = await supabase
+        .from('booking_submissions')
+        .insert([
+          {
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+            service_type: serviceType,
+            desired_date: formattedDate,
+            desired_time: formData.desiredTime,
+            status: 'new'
+          },
+        ]);
 
       if (error) throw error;
 
@@ -168,11 +172,13 @@ export default function BookingModal({ isOpen, onClose, serviceType }: BookingMo
           </div>
 
           {submitMessage && (
-            <div className={`p-4 rounded-lg ${
-              submitMessage.includes('error')
-                ? 'bg-red-50 border border-red-200 text-red-800'
-                : 'bg-blue-50 border border-blue-200 text-blue-800'
-            }`}>
+            <div
+              className={`p-4 rounded-lg ${
+                submitMessage.toLowerCase().includes('error')
+                  ? 'bg-red-50 border border-red-200 text-red-800'
+                  : 'bg-blue-50 border border-blue-200 text-blue-800'
+              }`}
+            >
               {submitMessage}
             </div>
           )}
