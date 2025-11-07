@@ -39,7 +39,6 @@ Deno.serve(async (req: Request) => {
         phone: phone || null,
         file_name: file_name || null,
         file_url: file_url || null,
-        file_data: file_data || null, // Optional: may be null if stored via Storage bucket
         file_size: file_size || null,
         comments: comments || "",
         status: "pending",
