@@ -2,24 +2,21 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import mammoth from "npm:mammoth";
 import pdfParse from "npm:pdf-parse";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "https://daccursocareerstudio.com",
-  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Client-Info, apikey",
-};
-
 Deno.serve(async (req) => {
+  // Dynamically match frontend origin for CORS (works for local + production)
+  const origin = req.headers.get("origin") || "*";
+  const corsHeaders = {
+    "Access-Control-Allow-Origin": origin,
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Client-Info, apikey",
+    "Access-Control-Allow-Private-Network": "true",
+    "Access-Control-Max-Age": "86400",
+  };
+
+  // Handle CORS preflight
   if (req.method === "OPTIONS") {
-  return new Response(null, {
-    status: 204,
-    headers: {
-      "Access-Control-Allow-Origin": "https://daccursocareerstudio.com",
-      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Client-Info, apikey",
-      "Access-Control-Max-Age": "86400",
-    },
-  });
-}
+    return new Response("ok", { status: 200, headers: corsHeaders });
+  }
 
   try {
     const { file_name, file_data, file_size } = await req.json();
@@ -31,16 +28,16 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Decode base64
+    // Decode base64 file data
     const base64Data = file_data.split(",")[1];
     const fileBytes = Uint8Array.from(atob(base64Data), (c) => c.charCodeAt(0));
 
-    // Extract text depending on file type
+    // Extract text from DOCX or PDF
     let resumeText = "";
-    if (file_name.endsWith(".pdf")) {
+    if (file_name.toLowerCase().endsWith(".pdf")) {
       const parsed = await pdfParse(fileBytes);
       resumeText = parsed.text;
-    } else if (file_name.endsWith(".docx")) {
+    } else if (file_name.toLowerCase().endsWith(".docx")) {
       const result = await mammoth.extractRawText({ buffer: fileBytes });
       resumeText = result.value;
     } else {
@@ -57,7 +54,7 @@ Deno.serve(async (req) => {
       );
     }
 
-    // AI Feedback
+    // Generate AI feedback
     const openaiApiKey = Deno.env.get("OPENAI_API_KEY");
     if (!openaiApiKey) throw new Error("Missing OpenAI API key");
 
@@ -67,11 +64,11 @@ Deno.serve(async (req) => {
         {
           role: "system",
           content:
-            "You are an expert hiring manager and resume reviewer. Analyze resumes and provide detailed, actionable feedback on formatting, content, and overall presentation. Avoid markdown syntax.",
+            "You are an expert hiring manager and resume reviewer. Analyze resumes and provide detailed, actionable feedback on formatting, content, and overall presentation. Avoid markdown syntax and keep paragraphs plain text.",
         },
         {
           role: "user",
-          content: `Please analyze this resume and provide detailed feedback under these sections:
+          content: `Please analyze this resume and provide detailed feedback in the following sections:
 1. Overall Impression (score out of 10)
 2. Formatting & Layout
 3. Content Quality
@@ -99,24 +96,24 @@ ${resumeText}`,
 
     if (!aiResponse.ok) {
       const errText = await aiResponse.text();
-      console.error("OpenAI error:", errText);
+      console.error("OpenAI API error:", errText);
       throw new Error("OpenAI API request failed.");
     }
 
     const data = await aiResponse.json();
     const feedback = data?.choices?.[0]?.message?.content || "No feedback generated.";
 
-    // Save to Supabase
+    // Upload original file to Supabase Storage
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    if (!supabaseUrl || !supabaseKey) throw new Error("Missing Supabase environment variables.");
 
-    // Upload the original file to the feedback bucket
     const filePath = `feedback/${file_name}`;
     const uploadRes = await fetch(`${supabaseUrl}/storage/v1/object/feedback/${filePath}`, {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${supabaseKey}`,
-        "apikey": supabaseKey!,
+        "apikey": supabaseKey,
         "Content-Type": "application/octet-stream",
       },
       body: fileBytes,
@@ -128,12 +125,12 @@ ${resumeText}`,
       throw new Error("Failed to upload file to feedback bucket.");
     }
 
-    // Insert feedback record
+    // Insert AI feedback record
     const insertRes = await fetch(`${supabaseUrl}/rest/v1/ai_resume_feedback`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "apikey": supabaseKey!,
+        "apikey": supabaseKey,
         "Authorization": `Bearer ${supabaseKey}`,
         "Prefer": "return=representation",
       },
@@ -152,6 +149,7 @@ ${resumeText}`,
       throw new Error("Failed to insert record into ai_resume_feedback.");
     }
 
+    // Return success + AI feedback
     return new Response(JSON.stringify({ feedback }), {
       status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
