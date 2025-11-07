@@ -2,104 +2,104 @@ import { Compass, Briefcase, LineChart, GraduationCap } from 'lucide-react';
 import ParticleBackground from '../components/ParticleBackground';
 import { Helmet } from "react-helmet-async";
 
-<Helmet>
-  <title>Career Advice | Daccurso Career Studio</title>
-  <meta
-    name="description"
-    content="Practical insights and tips to navigate your career — from resume updates and job searching to skill development and professional growth."
-  />
-  <link rel="canonical" href="https://daccursocareerstudio.com/career-advice" />
-
-  <meta property="og:type" content="article" />
-  <meta property="og:title" content="Career Advice | Daccurso Career Studio" />
-  <meta property="og:description" content="Explore expert articles on job searching, interviewing, and professional development." />
-  <meta
-    property="og:image"
-    content="https://bvevrurqtidadhfsuoee.supabase.co/storage/v1/object/public/media/dcs-apple-touch-icon.png"
-  />
-
-  {/* Career Strategy Consultation Service Schema */}
-  <script type="application/ld+json">{`
-    {
-      "@context": "https://schema.org",
-      "@type": "Service",
-      "serviceType": "Career Strategy Consultation",
-      "provider": {
-        "@type": "Organization",
-        "name": "Daccurso Career Studio"
-      },
-      "description": "Personalized career roadmap sessions for goal setting and job search strategy.",
-      "offers": {
-        "@type": "Offer",
-        "priceCurrency": "USD",
-        "price": "69.99",
-        "availability": "https://schema.org/InStock"
-      }
-    }
-  `}</script>
-
-  {/* FAQ Schema */}
-  <script type="application/ld+json">{`
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "How often should I update my resume?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Update your resume after every significant achievement, new skill, or role change. Review it quarterly to ensure it reflects your current capabilities."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Should I include a cover letter?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Yes, especially when an application requests one or when you're changing careers. A well-crafted cover letter highlights motivation and unique fit."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "How do I explain employment gaps?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Be honest and frame gaps positively by emphasizing skills, volunteer work, or personal growth. Focus on readiness for the opportunity ahead."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "When should I start looking for my next role?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Begin searching when you've maximized growth in your current role or reached key goals. It's easier to find new opportunities while employed."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "How long should my resume be?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "For most early to mid-career professionals, one page is ideal. If you have 10+ years of highly relevant experience, two pages is acceptable. Focus on recent, relevant achievements rather than trying to include everything."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Should I negotiate my salary?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Absolutely. Most employers expect candidates to negotiate and respect those who advocate for themselves professionally. Research market rates thoroughly, wait until you have a written offer, and approach the conversation collaboratively."
-          }
-        }
-      ]
-    }
-  `}</script>
-</Helmet>
-
 export default function CareerAdvice() {
   return (
     <div className="min-h-screen bg-gray-50 py-12 relative">
+      <Helmet>
+        <title>Career Advice | Daccurso Career Studio</title>
+        <meta
+          name="description"
+          content="Practical insights and tips to navigate your career — from resume updates and job searching to skill development and professional growth."
+        />
+        <link rel="canonical" href="https://daccursocareerstudio.com/career-advice" />
+
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content="Career Advice & Tips | Daccurso Career Studio" />
+        <meta property="og:description" content="Explore expert articles on job searching, interviewing, and professional development." />
+        <meta
+          property="og:image"
+          content="https://bvevrurqtidadhfsuoee.supabase.co/storage/v1/object/public/media/dcs-apple-touch-icon.png"
+        />
+
+        {/* Career Strategy Consultation Service Schema */}
+        <script type="application/ld+json">{`
+          {
+            "@context": "https://schema.org",
+            "@type": "Service",
+            "serviceType": "Career Strategy Consultation",
+            "provider": {
+              "@type": "Organization",
+              "name": "Daccurso Career Studio"
+            },
+            "description": "Personalized career roadmap sessions for goal setting and job search strategy.",
+            "offers": {
+              "@type": "Offer",
+              "priceCurrency": "USD",
+              "price": "69.99",
+              "availability": "https://schema.org/InStock"
+            }
+          }
+        `}</script>
+
+        {/* FAQ Schema */}
+        <script type="application/ld+json">{`
+          {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "How often should I update my resume?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Update your resume after every significant achievement, new skill, or role change. Review it quarterly to ensure it reflects your current capabilities."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Should I include a cover letter?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes, especially when an application requests one or when you're changing careers. A well-crafted cover letter highlights motivation and unique fit."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How do I explain employment gaps?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Be honest and frame gaps positively by emphasizing skills, volunteer work, or personal growth. Focus on readiness for the opportunity ahead."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "When should I start looking for my next role?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Begin searching when you've maximized growth in your current role or reached key goals. It's easier to find new opportunities while employed."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How long should my resume be?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "For most early to mid-career professionals, one page is ideal. If you have 10+ years of highly relevant experience, two pages is acceptable. Focus on recent, relevant achievements rather than trying to include everything."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Should I negotiate my salary?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Absolutely. Most employers expect candidates to negotiate and respect those who advocate for themselves professionally. Research market rates thoroughly, wait until you have a written offer, and approach the conversation collaboratively."
+                }
+              }
+            ]
+          }
+        `}</script>
+      </Helmet>
+
       <ParticleBackground isDashboard={false} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-12 animate-slide-up">
