@@ -35,7 +35,7 @@ export default function Home() {
             "@type": "Organization",
             "name": "Daccurso Career Studio",
             "url": "https://daccursocareerstudio.com",
-            "logo": "https://bvevrurqtidadhfsuoee.supabase.co/storage/v1/object/public/media/dcs-apple-touch-icon.png",
+            "logo": "https://nkrnbtythzdnogvtdizv.supabase.co/storage/v1/object/public/media/dcs-apple-touch-icon.png",
             "founder": {
               "@type": "Person",
               "name": "Anthony Daccurso",
