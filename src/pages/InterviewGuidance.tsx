@@ -15,7 +15,7 @@ export default function InterviewGuidance() {
         <link rel="canonical" href="https://daccursocareerstudio.com/interview-guidance" />
 
         <meta property="og:type" content="service" />
-        <meta property="og:title" content="Interview Coaching & Strategy | Daccurso Career Studio" />
+        <meta property="og:title" content="Interview Guidance | Daccurso Career Studio" />
         <meta property="og:description" content="One-on-one mock interviews, strategy coaching, and negotiation guidance to help you land the job you deserve." />
         <meta property="og:image" content="https://bvevrurqtidadhfsuoee.supabase.co/storage/v1/object/public/media/dcs-apple-touch-icon.png" />
 
