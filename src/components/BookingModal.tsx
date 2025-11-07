@@ -13,6 +13,7 @@ export default function BookingModal({ isOpen, onClose, serviceType }: BookingMo
     name: '',
     email: '',
     phone: '',
+    industry: '',
     desiredDate: '',
     desiredTime: ''
   });
@@ -27,7 +28,6 @@ export default function BookingModal({ isOpen, onClose, serviceType }: BookingMo
     setSubmitMessage('');
 
     try {
-      // Format date to YYYY-MM-DD for Supabase
       const formattedDate = new Date(formData.desiredDate).toISOString().split('T')[0];
 
       const { error } = await supabase
@@ -38,7 +38,7 @@ export default function BookingModal({ isOpen, onClose, serviceType }: BookingMo
             email: formData.email,
             phone: formData.phone,
             service_type: serviceType,
-            industry: formData.industry,
+            industry: formData.industry || null,
             desired_date: formattedDate,
             desired_time: formData.desiredTime,
             status: 'new'
@@ -52,6 +52,7 @@ export default function BookingModal({ isOpen, onClose, serviceType }: BookingMo
         name: '',
         email: '',
         phone: '',
+        industry: '',
         desiredDate: '',
         desiredTime: ''
       });
@@ -131,6 +132,22 @@ export default function BookingModal({ isOpen, onClose, serviceType }: BookingMo
               value={formData.phone}
               onChange={handleChange}
               required
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+
+          {/* New Industry Field */}
+          <div>
+            <label htmlFor="industry" className="block text-sm font-medium text-gray-700 mb-1">
+              Industry <span className="text-gray-500">(optional)</span>
+            </label>
+            <input
+              type="text"
+              id="industry"
+              name="industry"
+              value={formData.industry}
+              onChange={handleChange}
+              placeholder="e.g. Marketing, Tech, Education"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
