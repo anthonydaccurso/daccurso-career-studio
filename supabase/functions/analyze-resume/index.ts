@@ -1,5 +1,6 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
-import { createClient } from "npm:@supabase/supabase-js@2";
+import { PDFDocument } from "npm:pdf-lib";
+import mammoth from "npm:mammoth";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "https://daccursocareerstudio.com",
@@ -13,24 +14,46 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { resumeText, file_name, file_data, file_size } = await req.json();
+    const { file_name, file_data, file_size } = await req.json();
 
-    if (!resumeText || resumeText.trim().length < 50) {
-      return new Response(
-        JSON.stringify({ error: "Resume text is required and must contain enough content." }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+    if (!file_data) {
+      return new Response(JSON.stringify({ error: "Missing file data." }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
-    // Initialize Supabase
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
-    );
+    // Decode base64 to binary
+    const base64Data = file_data.split(",")[1];
+    const fileBytes = Uint8Array.from(atob(base64Data), (c) => c.charCodeAt(0));
 
-    // Generate AI feedback
+    let resumeText = "";
+
+    if (file_name.endsWith(".pdf")) {
+      // Extract text from PDF
+      const pdfDoc = await PDFDocument.load(fileBytes);
+      const pages = pdfDoc.getPages();
+      resumeText = pages.map((p) => p.getTextContent?.() || "").join("\n");
+    } else if (file_name.endsWith(".docx")) {
+      // Extract text from DOCX
+      const result = await mammoth.extractRawText({ buffer: fileBytes });
+      resumeText = result.value;
+    } else {
+      return new Response(JSON.stringify({ error: "Unsupported file type. Upload DOCX or PDF only." }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    if (!resumeText || resumeText.trim().length < 50) {
+      return new Response(JSON.stringify({ error: "Extracted text too short or unreadable." }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const openaiApiKey = Deno.env.get("OPENAI_API_KEY");
-    if (!openaiApiKey) throw new Error("Missing OpenAI API key in environment.");
+    if (!openaiApiKey) throw new Error("Missing OpenAI API key");
 
     const payload = {
       model: "gpt-4o-mini",
@@ -38,12 +61,11 @@ Deno.serve(async (req) => {
         {
           role: "system",
           content:
-            "You are an expert hiring manager and resume reviewer. Analyze resumes and provide detailed, actionable feedback on formatting, content, ATS optimization, and overall presentation. Be specific, helpful, and professional. Avoid markdown syntax — use plain text paragraphs.",
+            "You are an expert hiring manager and resume reviewer. Analyze resumes and provide detailed, actionable feedback on formatting, content, and overall presentation. Avoid markdown syntax.",
         },
         {
           role: "user",
-          content: `Please analyze this resume and provide detailed feedback in the following categories:
-
+          content: `Please analyze this resume and provide detailed feedback under these sections:
 1. Overall Impression (score out of 10)
 2. Formatting & Layout
 3. Content Quality
@@ -57,82 +79,57 @@ ${resumeText}`,
         },
       ],
       temperature: 0.7,
-      max_tokens: 2000,
+      max_tokens: 1800,
     };
 
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 15000);
-    const aiResponse = await fetch("https://api.openai.com/v1/chat/completions", {
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${openaiApiKey}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(payload),
-      signal: controller.signal,
-    }).finally(() => clearTimeout(timeout));
+    });
 
-    if (!aiResponse.ok) {
-      const errText = await aiResponse.text();
-      console.error("OpenAI API error:", errText);
-      return new Response(
-        JSON.stringify({ error: "Failed to analyze resume. Please try again later." }),
-        { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+    if (!response.ok) {
+      const err = await response.text();
+      console.error("OpenAI error:", err);
+      throw new Error("OpenAI request failed.");
     }
 
-    const data = await aiResponse.json();
+    const data = await response.json();
     const feedback = data?.choices?.[0]?.message?.content || "No feedback generated.";
 
-    // Upload resume to Supabase Storage (feedback bucket)
-    let file_path = null;
-    if (file_name && file_data) {
-      const path = `resumes/${Date.now()}-${file_name}`;
-      const { error: uploadError } = await supabase.storage
-        .from("feedback")
-        .upload(path, decodeBase64(file_data), {
-          contentType: "application/pdf",
-          upsert: true,
-        });
-      if (uploadError) throw uploadError;
-      file_path = path;
-    }
+    // Save file + feedback into Supabase
+    const supabaseUrl = Deno.env.get("SUPABASE_URL");
+    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
-    // Insert feedback entry into database
-    const { error: dbError } = await supabase.from("ai_resume_feedback").insert([
-      {
-        file_name: file_name || "unknown.pdf",
-        file_size: file_size || null,
+    const supabaseResponse = await fetch(`${supabaseUrl}/rest/v1/ai_resume_feedback`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": supabaseKey!,
+        "Authorization": `Bearer ${supabaseKey}`,
+        "Prefer": "return=representation",
+      },
+      body: JSON.stringify({
+        file_name,
+        file_size,
         ai_feedback: feedback,
         bucket_name: "feedback",
-        file_path,
-      },
-    ]);
-    if (dbError) throw dbError;
-
-    return new Response(
-      JSON.stringify({ success: true, feedback }),
-      { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
-  } catch (error) {
-    console.error("analyze-resume error:", error);
-    return new Response(
-      JSON.stringify({
-        error: error instanceof Error ? `Error: ${error.message}` : "Unknown internal error.",
+        file_path: `feedback/${file_name}`,
       }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    });
+
+    return new Response(JSON.stringify({ feedback }), {
+      status: 200,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    console.error("Analyze Resume Error:", error);
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
 });
-
-// Helper: decode base64 file
-function decodeBase64(base64String: string) {
-  const base64 = base64String.split(",")[1] || base64String;
-  const binary = atob(base64);
-  const len = binary.length;
-  const bytes = new Uint8Array(len);
-  for (let i = 0; i < len; i++) {
-    bytes[i] = binary.charCodeAt(i);
-  }
-  return bytes.buffer;
-}
