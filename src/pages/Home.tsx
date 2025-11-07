@@ -19,13 +19,13 @@ export default function Home() {
         <meta property="og:url" content="https://daccursocareerstudio.com/" />
         <meta property="og:title" content="Daccurso Career Studio | Resume & Career Coaching" />
         <meta property="og:description" content="Career coaching, resume building, and interview prep for students and young professionals." />
-        <meta property="og:image" content="https://bvevrurqtidadhfsuoee.supabase.co/storage/v1/object/public/media/dcs-apple-touch-icon.png" />
+        <meta property="og:image" content="https://nkrnbtythzdnogvtdizv.supabase.co/storage/v1/object/public/media/dcs-apple-touch-icon.png" />
 
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Daccurso Career Studio | Resume & Career Coaching" />
         <meta name="twitter:description" content="Career coaching, resume building, and interview prep for students and young professionals." />
-        <meta name="twitter:image" content="https://bvevrurqtidadhfsuoee.supabase.co/storage/v1/object/public/media/dcs-apple-touch-icon.png" />
+        <meta name="twitter:image" content="https://nkrnbtythzdnogvtdizv.supabase.co/storage/v1/object/public/media/dcs-apple-touch-icon.png" />
 
         {/* Organization Schema */}
         <script type="application/ld+json">
