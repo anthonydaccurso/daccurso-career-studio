@@ -3,6 +3,8 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 import mammoth from "npm:mammoth@1.8.0";
 import pdfParse from "npm:pdf-parse@1.1.1";
 
+// Enable CORS for your domain
+
 const corsHeaders = {
   "Access-Control-Allow-Origin": "https://daccursocareerstudio.com",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
