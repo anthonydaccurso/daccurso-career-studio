@@ -3,41 +3,6 @@ import { Mail, Clock, Send, CheckCircle, ExternalLink } from 'lucide-react';
 import ParticleBackground from '../components/ParticleBackground';
 import { Helmet } from "react-helmet-async";
 
-<Helmet>
-  <title>Contact Me | Daccurso Career Studio</title>
-  <meta name="description" content="Get in touch with Anthony Daccurso for personalized resume services, interview coaching, or career consultations. Responses within 24 hours." />
-  <link rel="canonical" href="https://daccursocareerstudio.com/contact-me" />
-
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="Contact Daccurso Career Studio" />
-  <meta property="og:description" content="Reach out for resume rewrites, interview prep, or custom career support packages." />
-  <meta property="og:image" content="https://bvevrurqtidadhfsuoee.supabase.co/storage/v1/object/public/media/dcs-apple-touch-icon.png" />
-
-   <script type="application/ld+json">
-    {`
-    {
-      "@context": "https://schema.org",
-      "@type": "ContactPage",
-      "url": "https://daccursocareerstudio.com/contact",
-      "mainEntity": {
-        "@type": "Person",
-        "name": "Anthony Daccurso",
-        "url": "https://daccursocareerstudio.com",
-        "contactPoint": {
-          "@type": "ContactPoint",
-          "contactType": "Customer Service",
-          "areaServed": "US"
-        },
-        "sameAs": [
-          "https://linkedin.com/company/daccursocareerstudio",
-          "https://github.com/anthonydaccurso"
-        ]
-      }
-    }
-    `}
-  </script>
-</Helmet>
-
 export default function ContactMe() {
   const [formStatus, setFormStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [submitting, setSubmitting] = useState(false);
@@ -92,6 +57,41 @@ export default function ContactMe() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 relative">
+      <Helmet>
+        <title>Contact Me | Daccurso Career Studio</title>
+        <meta name="description" content="Get in touch with Anthony Daccurso for personalized resume services, interview coaching, or career consultations. Responses within 24 hours." />
+        <link rel="canonical" href="https://daccursocareerstudio.com/contact-me" />
+
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Contact Daccurso Career Studio" />
+        <meta property="og:description" content="Reach out for resume rewrites, interview prep, or custom career support packages." />
+        <meta property="og:image" content="https://bvevrurqtidadhfsuoee.supabase.co/storage/v1/object/public/media/dcs-apple-touch-icon.png" />
+
+        <script type="application/ld+json">
+          {`
+          {
+            "@context": "https://schema.org",
+            "@type": "ContactPage",
+            "url": "https://daccursocareerstudio.com/contact",
+            "mainEntity": {
+              "@type": "Person",
+              "name": "Anthony Daccurso",
+              "url": "https://daccursocareerstudio.com",
+              "contactPoint": {
+                "@type": "ContactPoint",
+                "contactType": "Customer Service",
+                "areaServed": "US"
+              },
+              "sameAs": [
+                "https://linkedin.com/company/daccursocareerstudio",
+                "https://github.com/anthonydaccurso"
+              ]
+            }
+          }
+          `}
+        </script>
+      </Helmet>
+
       <ParticleBackground isDashboard={false} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-12 animate-slide-up">
