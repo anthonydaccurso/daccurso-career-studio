@@ -336,33 +336,11 @@ function ServiceCard({
         ))}
       </ul>
       <button
-        onClick={() => handleBookSession('Mock Interview Session')}
-        className="bg-[#1c336f] text-white px-8 py-3 rounded-lg font-semibold hover:bg-[#2d4a8f] transition-colors"
+        onClick={onBook}
+        className="w-full bg-[#1c336f] text-white py-2 rounded-lg font-semibold hover:bg-[#2d4a8f] transition-colors"
       >
-        Book Mock Interview
+        Book Now
       </button>
-
-      <button
-        onClick={() => handleBookSession('Interview Strategy Session')}
-        className="bg-[#1c336f] text-white px-8 py-3 rounded-lg font-semibold hover:bg-[#2d4a8f] transition-colors"
-      >
-        Book Strategy Session
-      </button>
-
-      <button
-        onClick={() => handleBookSession('Career Strategy Consultation')}
-        className="bg-[#1c336f] text-white px-8 py-3 rounded-lg font-semibold hover:bg-[#2d4a8f] transition-colors"
-      >
-        Book Career Consultation
-      </button>
-
-      <button
-        onClick={() => handleBookSession('Salary Negotiation Coaching')}
-        className="bg-[#1c336f] text-white px-8 py-3 rounded-lg font-semibold hover:bg-[#2d4a8f] transition-colors"
-      >
-        Book Negotiation Coaching
-      </button>
-
-          </div>
-        );
-      }
+    </div>
+  );
+}
