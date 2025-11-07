@@ -5,57 +5,65 @@ import pdfParse from "npm:pdf-parse";
 const corsHeaders = {
   "Access-Control-Allow-Origin": "https://daccursocareerstudio.com",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization, apikey, X-Client-Info",
+  "Access-Control-Allow-Headers": "Authorization, apikey, Content-Type, X-Client-Info",
   "Access-Control-Max-Age": "86400",
 };
 
-// 1. Handle CORS preflight cleanly before anything else
 Deno.serve(async (req) => {
+  // Handle CORS preflight
   if (req.method === "OPTIONS") {
     return new Response("ok", { status: 200, headers: corsHeaders });
   }
 
   try {
-    // 2. Parse input
-    const { file_name, file_data, file_size } = await req.json();
-    if (!file_data) {
-      return new Response(JSON.stringify({ error: "Missing file data." }), {
+    // Expect multipart/form-data
+    const form = await req.formData();
+    const file = form.get("file") as File | null;
+
+    if (!file) {
+      return new Response(JSON.stringify({ error: "Missing file upload." }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    // 3. Decode base64
-    const base64Data = file_data.split(",")[1];
-    const fileBytes = Uint8Array.from(atob(base64Data), (c) => c.charCodeAt(0));
+    const fileName = file.name;
+    const fileSize = file.size;
+    const arrayBuffer = await file.arrayBuffer();
+    const fileBytes = new Uint8Array(arrayBuffer);
 
-    // 4. Extract text (DOCX / PDF)
+    // Extract text from file
     let resumeText = "";
-    if (file_name.toLowerCase().endsWith(".pdf")) {
+    if (fileName.toLowerCase().endsWith(".pdf")) {
       const parsed = await pdfParse(fileBytes);
       resumeText = parsed.text;
-    } else if (file_name.toLowerCase().endsWith(".docx")) {
+    } else if (fileName.toLowerCase().endsWith(".docx")) {
       const result = await mammoth.extractRawText({ buffer: fileBytes });
       resumeText = result.value;
     } else {
-      return new Response(JSON.stringify({ error: "Only DOCX or PDF files supported." }), {
+      return new Response(JSON.stringify({ error: "Only DOCX or PDF supported." }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
     if (!resumeText || resumeText.trim().length < 50) {
-      return new Response(JSON.stringify({ error: "Extracted text too short or unreadable." }), {
+      return new Response(JSON.stringify({ error: "File unreadable or too short." }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    // 5. AI feedback
+    // Send text to OpenAI
     const openaiKey = Deno.env.get("OPENAI_API_KEY");
-    if (!openaiKey) throw new Error("Missing OpenAI API key.");
+    const supabaseUrl = Deno.env.get("SUPABASE_URL");
+    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
-    const aiRes = await fetch("https://api.openai.com/v1/chat/completions", {
+    if (!openaiKey || !supabaseUrl || !supabaseKey) {
+      throw new Error("Missing environment variables.");
+    }
+
+    const aiResponse = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${openaiKey}`,
@@ -67,7 +75,7 @@ Deno.serve(async (req) => {
           {
             role: "system",
             content:
-              "You are an expert resume reviewer. Provide detailed, professional feedback in plain text (no markdown).",
+              "You are an expert resume reviewer. Provide detailed, structured feedback in plain text (no markdown).",
           },
           {
             role: "user",
@@ -89,22 +97,18 @@ ${resumeText}`,
       }),
     });
 
-    if (!aiRes.ok) {
-      const err = await aiRes.text();
-      console.error("OpenAI API error:", err);
-      throw new Error("OpenAI API request failed.");
+    if (!aiResponse.ok) {
+      const errText = await aiResponse.text();
+      console.error("OpenAI API error:", errText);
+      throw new Error("Failed to analyze resume.");
     }
 
-    const data = await aiRes.json();
+    const data = await aiResponse.json();
     const feedback = data?.choices?.[0]?.message?.content || "No feedback generated.";
 
-    // 6. Save file + record
-    const supabaseUrl = Deno.env.get("SUPABASE_URL");
-    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-    if (!supabaseUrl || !supabaseKey) throw new Error("Missing Supabase credentials.");
-
-    const filePath = `feedback/${file_name}`;
-    const upload = await fetch(`${supabaseUrl}/storage/v1/object/feedback/${filePath}`, {
+    // Upload file to feedback bucket
+    const filePath = `feedback/${fileName}`;
+    const uploadRes = await fetch(`${supabaseUrl}/storage/v1/object/feedback/${filePath}`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${supabaseKey}`,
@@ -114,41 +118,43 @@ ${resumeText}`,
       body: fileBytes,
     });
 
-    if (!upload.ok) {
-      console.error("Upload failed:", await upload.text());
-      throw new Error("Failed to upload to feedback bucket.");
+    if (!uploadRes.ok) {
+      const err = await uploadRes.text();
+      console.error("Upload error:", err);
+      throw new Error("Failed to upload file to feedback bucket.");
     }
 
-    const insert = await fetch(`${supabaseUrl}/rest/v1/ai_resume_feedback`, {
+    // Insert record into ai_resume_feedback
+    const insertRes = await fetch(`${supabaseUrl}/rest/v1/ai_resume_feedback`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        apikey: supabaseKey,
         Authorization: `Bearer ${supabaseKey}`,
+        apikey: supabaseKey,
         Prefer: "return=representation",
       },
       body: JSON.stringify({
-        file_name,
-        file_size,
+        file_name: fileName,
+        file_size: fileSize,
         ai_feedback: feedback,
         bucket_name: "feedback",
         file_path: filePath,
       }),
     });
 
-    if (!insert.ok) {
-      console.error("Insert failed:", await insert.text());
-      throw new Error("Failed to insert feedback record.");
+    if (!insertRes.ok) {
+      const errText = await insertRes.text();
+      console.error("Database insert error:", errText);
+      throw new Error("Failed to log feedback in database.");
     }
 
-    // 7. Return success
     return new Response(JSON.stringify({ feedback }), {
       status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
-  } catch (err) {
-    console.error("Analyze Resume Error:", err);
-    return new Response(JSON.stringify({ error: err.message }), {
+  } catch (error) {
+    console.error("Analyze Resume Error:", error);
+    return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
