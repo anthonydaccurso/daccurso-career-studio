@@ -34,7 +34,7 @@ export default function Pricing() {
         />
         <meta
           property="og:image"
-          content="https://bvevrurqtidadhfsuoee.supabase.co/storage/v1/object/public/media/dcs-apple-touch-icon.png"
+          content="https://nkrnbtythzdnogvtdizv.supabase.co/storage/v1/object/public/media/dcs-apple-touch-icon.png"
         />
         <meta property="og:site_name" content="Daccurso Career Studio" />
 
@@ -47,7 +47,7 @@ export default function Pricing() {
         />
         <meta
           name="twitter:image"
-          content="https://bvevrurqtidadhfsuoee.supabase.co/storage/v1/object/public/media/dcs-apple-touch-icon.png"
+          content="https://nkrnbtythzdnogvtdizv.supabase.co/storage/v1/object/public/media/dcs-apple-touch-icon.png"
         />
 
         {/* Structured Data (ProductGroup + Offers) */}
