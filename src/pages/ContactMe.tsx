@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { Mail, Clock, Send, CheckCircle, ExternalLink } from 'lucide-react';
+import { Mail, Clock, Send, CheckCircle, ExternalLink, AlertCircle } from 'lucide-react';
 import ParticleBackground from '../components/ParticleBackground';
 import { Helmet } from "react-helmet-async";
 
 export default function ContactMe() {
   const [formStatus, setFormStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [submitting, setSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -17,14 +18,27 @@ export default function ContactMe() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
+    setFormStatus('idle');
+    setErrorMessage('');
 
     try {
       const apiUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/submit-contact`;
+      
+      console.log('Submitting contact form to:', apiUrl);
+      console.log('Form data:', {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        service: formData.service,
+        messageLength: formData.message.length,
+      });
+
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+          'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
         },
         body: JSON.stringify({
           name: formData.name,
@@ -35,13 +49,28 @@ export default function ContactMe() {
         }),
       });
 
-      const result = await response.json();
+      console.log('Response status:', response.status);
+      
+      const responseText = await response.text();
+      console.log('Response text:', responseText);
 
-      if (!result.success) throw new Error(result.error);
+      let result;
+      try {
+        result = JSON.parse(responseText);
+      } catch (parseError) {
+        console.error('Failed to parse response:', parseError);
+        throw new Error('Invalid response from server');
+      }
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || `Server error: ${response.status}`);
+      }
 
       setFormStatus('success');
+      console.log('Contact form submitted successfully');
     } catch (error) {
       console.error('Error submitting contact form:', error);
+      setErrorMessage(error instanceof Error ? error.message : 'An unknown error occurred');
       setFormStatus('error');
     } finally {
       setSubmitting(false);
@@ -149,6 +178,7 @@ export default function ContactMe() {
               <button
                 onClick={() => {
                   setFormStatus('idle');
+                  setErrorMessage('');
                   setFormData({
                     name: '',
                     email: '',
@@ -253,10 +283,14 @@ export default function ContactMe() {
                 </div>
 
                 {formStatus === 'error' && (
-                  <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-                    <p className="text-red-800 font-medium">
-                      Failed to send message. Please try again.
-                    </p>
+                  <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start">
+                    <AlertCircle className="text-red-600 mr-3 flex-shrink-0 mt-0.5" size={20} />
+                    <div>
+                      <p className="text-red-800 font-medium">Failed to send message</p>
+                      <p className="text-red-700 text-sm mt-1">
+                        {errorMessage || 'Please try again or contact me directly at 221adaccurso1@gmail.com'}
+                      </p>
+                    </div>
                   </div>
                 )}
 
@@ -265,8 +299,17 @@ export default function ContactMe() {
                   disabled={submitting}
                   className="w-full bg-[#1c336f] text-white py-3 rounded-lg font-semibold hover:bg-[#2d4a8f] transition-colors flex items-center justify-center disabled:bg-gray-300 disabled:cursor-not-allowed"
                 >
-                  <Send className="mr-2" size={20} />
-                  {submitting ? 'Sending...' : 'Send Message'}
+                  {submitting ? (
+                    <>
+                      <Send className="mr-2 animate-pulse" size={20} />
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="mr-2" size={20} />
+                      Send Message
+                    </>
+                  )}
                 </button>
               </form>
             </div>
