@@ -46,7 +46,7 @@ var vite_config_default = defineConfig({
             type: "image/png"
           },
           {
-            src: "https://bvevrurqtidadhfsuoee.supabase.co/storage/v1/object/public/media/dcs-web-app-manifest-512x512.png",
+            src: "https://nkrnbtythzdnogvtdizv.supabase.co/storage/v1/object/public/media/dcs-web-app-manifest-512x512.png",
             sizes: "512x512",
             type: "image/png",
             purpose: "any maskable"
