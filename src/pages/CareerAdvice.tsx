@@ -14,7 +14,7 @@ export default function CareerAdvice() {
         <link rel="canonical" href="https://daccursocareerstudio.com/career-advice" />
 
         <meta property="og:type" content="article" />
-        <meta property="og:title" content="Career Advice & Tips | Daccurso Career Studio" />
+        <meta property="og:title" content="Career Advice | Daccurso Career Studio" />
         <meta property="og:description" content="Explore expert articles on job searching, interviewing, and professional development." />
         <meta
           property="og:image"
