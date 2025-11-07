@@ -4,42 +4,43 @@ import ParticleBackground from '../components/ParticleBackground';
 import BookingModal from '../components/BookingModal';
 import { Helmet } from "react-helmet-async";
 
-<Helmet>
-  <title>Interview Guidance | Daccurso Career Studio</title>
-  <meta name="description" content="Mock interviews, strategy sessions, and salary negotiation coaching designed to help you walk into your next interview with confidence." />
-  <link rel="canonical" href="https://daccursocareerstudio.com/interview-guidance" />
-
-  <meta property="og:type" content="service" />
-  <meta property="og:title" content="Interview Coaching | Daccurso Career Studio" />
-  <meta property="og:description" content="One-on-one mock interviews, strategy coaching, and negotiation guidance to help you land the job you deserve." />
-  <meta property="og:image" content="https://bvevrurqtidadhfsuoee.supabase.co/storage/v1/object/public/media/dcs-apple-touch-icon.png" />
-
-  <script type="application/ld+json">
-    {`
-    {
-      "@context": "https://schema.org",
-      "@type": "Service",
-      "serviceType": "Interview Coaching",
-      "provider": {
-        "@type": "Organization",
-        "name": "Daccurso Career Studio"
-      },
-      "description": "One-on-one interview strategy sessions to improve confidence and communication.",
-      "offers": {
-        "@type": "Offer",
-        "priceCurrency": "USD",
-        "price": "49.99",
-        "availability": "https://schema.org/InStock"
-      }
-    }
-    `}
-  </script>
-</Helmet>
-
 export default function InterviewGuidance() {
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-gray-50 py-12 relative">
+      <Helmet>
+        <title>Interview Guidance | Daccurso Career Studio</title>
+        <meta name="description" content="Mock interviews, strategy sessions, and salary negotiation coaching designed to help you walk into your next interview with confidence." />
+        <link rel="canonical" href="https://daccursocareerstudio.com/interview-guidance" />
+
+        <meta property="og:type" content="service" />
+        <meta property="og:title" content="Interview Coaching & Strategy | Daccurso Career Studio" />
+        <meta property="og:description" content="One-on-one mock interviews, strategy coaching, and negotiation guidance to help you land the job you deserve." />
+        <meta property="og:image" content="https://bvevrurqtidadhfsuoee.supabase.co/storage/v1/object/public/media/dcs-apple-touch-icon.png" />
+
+        <script type="application/ld+json">
+          {`
+          {
+            "@context": "https://schema.org",
+            "@type": "Service",
+            "serviceType": "Interview Coaching",
+            "provider": {
+              "@type": "Organization",
+              "name": "Daccurso Career Studio"
+            },
+            "description": "One-on-one interview strategy sessions to improve confidence and communication.",
+            "offers": {
+              "@type": "Offer",
+              "priceCurrency": "USD",
+              "price": "49.99",
+              "availability": "https://schema.org/InStock"
+            }
+          }
+          `}
+        </script>
+      </Helmet>
+
       <ParticleBackground isDashboard={false} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-12 animate-slide-up">
