@@ -1,7 +1,6 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
 
-// ✅ Use your live site domain for production
 const corsHeaders = {
   "Access-Control-Allow-Origin": "https://daccursocareerstudio.com", // or "*" for local testing
   "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
@@ -10,7 +9,6 @@ const corsHeaders = {
 };
 
 Deno.serve(async (req: Request) => {
-  // 🟩 Handle preflight
   if (req.method === "OPTIONS") {
     return new Response("ok", { status: 200, headers: corsHeaders });
   }
@@ -27,7 +25,6 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    // 🧠 Initialize Supabase
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
     if (!supabaseUrl || !supabaseServiceKey) {
@@ -36,11 +33,9 @@ Deno.serve(async (req: Request) => {
 
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // 🗄️ Determine which table to read from
     const tableName =
       tableType === "ai" ? "ai_resume_feedback" : "resume_submissions";
 
-    // 🧾 Fetch file data from DB
     const { data, error } = await supabase
       .from(tableName)
       .select("file_name, file_data")
@@ -69,19 +64,16 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    // 🧩 Decode Base64 to binary
     const binaryString = atob(data.file_data);
     const bytes = new Uint8Array(binaryString.length);
     for (let i = 0; i < binaryString.length; i++) {
       bytes[i] = binaryString.charCodeAt(i);
     }
 
-    // 🧾 Determine content type
     const contentType = data.file_name.endsWith(".pdf")
       ? "application/pdf"
       : "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
 
-    // ✅ Return the binary file
     return new Response(bytes, {
       status: 200,
       headers: {
