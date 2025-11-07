@@ -44,20 +44,21 @@ export default function ResumeServices() {
       const fileName = `${timestamp}-${file.name}`;
       const filePath = `resumes/${fileName}`;
 
+      // 1️⃣ Upload file to Supabase Storage bucket
       const { error: uploadError } = await supabase.storage
-        .from('resume-files')
-        .upload(filePath, file);
+        .from('resumes')
+        .upload(filePath, file, { upsert: true });
 
-      if (uploadError) {
-        throw uploadError;
-      }
+      if (uploadError) throw uploadError;
 
+      // 2️⃣ Get public URL
       const { data: { publicUrl } } = supabase.storage
-        .from('resume-files')
+        .from('resumes')
         .getPublicUrl(filePath);
 
       let feedback = null;
 
+      // 3️⃣ Handle AI service
       if (selectedService === 'ai') {
         const formData = new FormData();
         formData.append('file', file);
@@ -81,44 +82,40 @@ export default function ResumeServices() {
         const data = await response.json();
         feedback = data.feedback;
         setAiFeedback(feedback);
-      }
 
-      if (selectedService === 'manual') {
-        const fileArrayBuffer = await file.arrayBuffer();
-        const uint8Array = new Uint8Array(fileArrayBuffer);
-        let binaryString = '';
-        for (let i = 0; i < uint8Array.length; i++) {
-          binaryString += String.fromCharCode(uint8Array[i]);
-        }
-        const fileBase64 = btoa(binaryString);
-
-        const submitResponse = await fetch(
-          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/submit-resume`,
+        // Save AI analysis record (optional)
+        await supabase.from('ai_resume_feedback').insert([
           {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-            },
-            body: JSON.stringify({
-              name: name,
-              email: email,
-              phone: phone,
-              file_name: file.name,
-              file_url: filePath,
-              file_data: fileBase64,
-              file_size: file.size,
-              comments: comments,
-            }),
-          }
-        );
-
-        const submitResult = await submitResponse.json();
-        if (!submitResult.success) throw new Error(submitResult.error);
+            file_name: file.name,
+            file_url: publicUrl,
+            file_size: file.size,
+            ai_feedback: feedback || 'N/A',
+            created_at: new Date().toISOString(),
+          },
+        ]);
       }
 
-      setUploadStatus('success');
+      // 4️⃣ Handle manual service
+      if (selectedService === 'manual') {
+        const { error: insertError } = await supabase.from('resume_submissions').insert([
+          {
+            name,
+            email,
+            phone,
+            comments,
+            file_name: file.name,
+            file_url: publicUrl,
+            file_size: file.size,
+            status: 'pending',
+            created_at: new Date().toISOString(),
+          },
+        ]);
 
+        if (insertError) throw insertError;
+      }
+
+      // 5️⃣ Success handling
+      setUploadStatus('success');
       if (selectedService === 'manual') {
         setFile(null);
         setName('');
@@ -174,7 +171,9 @@ export default function ResumeServices() {
       </Helmet>
 
       <ParticleBackground isDashboard={false} />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* Header */}
         <div className="text-center mb-12 animate-slide-up">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-black via-gray-700 to-[#2d4a8f] md:from-gray-900 md:via-slate-700 md:to-[#1c336f] bg-clip-text text-transparent mb-4">
             Resume Services
@@ -184,7 +183,9 @@ export default function ResumeServices() {
           </p>
         </div>
 
+        {/* Service Options */}
         <div className="grid md:grid-cols-2 gap-8 mb-12">
+          {/* Manual Service */}
           <div
             className={`bg-white border-2 rounded-lg p-8 cursor-pointer transition-all animate-slide-up animate-delay-100 ${
               selectedService === 'manual'
@@ -201,9 +202,7 @@ export default function ResumeServices() {
               <div className="bg-[#1c336f] w-12 h-12 rounded-lg flex items-center justify-center">
                 <Upload className="text-white" size={24} />
               </div>
-              {selectedService === 'manual' && (
-                <CheckCircle className="text-[#1c336f]" size={24} />
-              )}
+              {selectedService === 'manual' && <CheckCircle className="text-[#1c336f]" size={24} />}
             </div>
             <h3 className="text-2xl font-bold text-gray-900 mb-2">
               Professional Resume Building
@@ -229,11 +228,10 @@ export default function ResumeServices() {
                 <span>1-2 business day turnaround</span>
               </li>
             </ul>
-            <div className="text-[#1c336f] font-bold text-xl">
-              See Pricing Page
-            </div>
+            <div className="text-[#1c336f] font-bold text-xl">See Pricing Page</div>
           </div>
 
+          {/* AI Feedback Service */}
           <div
             className={`bg-white border-2 rounded-lg p-8 cursor-pointer transition-all animate-slide-up animate-delay-200 ${
               selectedService === 'ai'
@@ -250,9 +248,7 @@ export default function ResumeServices() {
               <div className="bg-[#1c336f] w-12 h-12 rounded-lg flex items-center justify-center">
                 <Sparkles className="text-white" size={24} />
               </div>
-              {selectedService === 'ai' && (
-                <CheckCircle className="text-[#1c336f]" size={24} />
-              )}
+              {selectedService === 'ai' && <CheckCircle className="text-[#1c336f]" size={24} />}
             </div>
             <h3 className="text-2xl font-bold text-gray-900 mb-2">
               AI Resume Feedback
@@ -278,12 +274,11 @@ export default function ResumeServices() {
                 <span>DOCX or PDF accepted</span>
               </li>
             </ul>
-            <div className="text-[#1c336f] font-bold text-xl">
-              Free
-            </div>
+            <div className="text-[#1c336f] font-bold text-xl">Free</div>
           </div>
         </div>
 
+        {/* Upload Form Section */}
         {selectedService && (
           <div className="max-w-2xl mx-auto bg-white border border-gray-300 rounded-lg p-8 animate-slide-up animate-delay-300">
             {aiFeedback ? (
@@ -292,9 +287,7 @@ export default function ResumeServices() {
                   <Sparkles className="text-[#1c336f] mr-3 flex-shrink-0 mt-1" size={32} />
                   <div>
                     <h2 className="text-2xl font-bold text-gray-900">AI Analysis Complete</h2>
-                    <p className="text-gray-600 mt-1">
-                      Here's your personalized resume feedback
-                    </p>
+                    <p className="text-gray-600 mt-1">Here's your personalized resume feedback</p>
                   </div>
                 </div>
                 <div className="bg-gray-50 p-6 rounded-lg border border-gray-200 mb-6">
@@ -321,8 +314,7 @@ export default function ResumeServices() {
                 <form onSubmit={handleSubmit}>
                   <div className="mb-6">
                     <label className="block text-gray-700 font-medium mb-2">
-                      Resume File
-                      {selectedService === 'manual' ? ' (DOCX only)' : ' (DOCX or PDF)'}
+                      Resume File {selectedService === 'manual' ? '(DOCX only)' : '(DOCX or PDF)'}
                     </label>
                     <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-[#1c336f] transition-colors">
                       <input
@@ -332,10 +324,7 @@ export default function ResumeServices() {
                         className="hidden"
                         id="file-upload"
                       />
-                      <label
-                        htmlFor="file-upload"
-                        className="cursor-pointer flex flex-col items-center"
-                      >
+                      <label htmlFor="file-upload" className="cursor-pointer flex flex-col items-center">
                         <Upload className="text-gray-400 mb-2" size={48} />
                         <span className="text-gray-600 mb-1">
                           {file ? file.name : 'Click to upload or drag and drop'}
@@ -407,9 +396,7 @@ export default function ResumeServices() {
                     <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg flex items-start">
                       <CheckCircle className="text-blue-600 mr-3 flex-shrink-0 mt-0.5" size={20} />
                       <div>
-                        <p className="text-blue-800 font-medium">
-                          Resume uploaded successfully!
-                        </p>
+                        <p className="text-blue-800 font-medium">Resume uploaded successfully!</p>
                         <p className="text-blue-700 text-sm mt-1">
                           We'll review your resume and get back to you within 1-2 business days.
                         </p>
@@ -422,28 +409,28 @@ export default function ResumeServices() {
                       <AlertCircle className="text-red-600 mr-3 flex-shrink-0 mt-0.5" size={20} />
                       <div>
                         <p className="text-red-800 font-medium">Upload failed</p>
-                        <p className="text-red-700 text-sm-700 text-sm mt-1">
-                      {errorMessage || 'Please try again or contact support if the problem persists.'}
-                    </p>
-                  </div>
-                </div>
-              )}
+                        <p className="text-red-700 text-sm mt-1">
+                          {errorMessage || 'Please try again or contact support if the problem persists.'}
+                        </p>
+                      </div>
+                    </div>
+                  )}
 
-              <button
-                type="submit"
-                disabled={!file || uploading}
-                className="w-full bg-[#1c336f] text-white py-3 rounded-lg font-semibold hover:bg-[#2d4a8f] transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center"
-              >
-                {uploading ? (
-                  <>
-                    <Loader2 className="animate-spin mr-2" size={20} />
-                    {selectedService === 'ai' ? 'Analyzing...' : 'Uploading...'}
-                  </>
-                ) : (
-                  selectedService === 'ai' ? 'Get AI Feedback' : 'Submit Resume'
-                )}
-              </button>
-            </form>
+                  <button
+                    type="submit"
+                    disabled={!file || uploading}
+                    className="w-full bg-[#1c336f] text-white py-3 rounded-lg font-semibold hover:bg-[#2d4a8f] transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center"
+                  >
+                    {uploading ? (
+                      <>
+                        <Loader2 className="animate-spin mr-2" size={20} />
+                        {selectedService === 'ai' ? 'Analyzing...' : 'Uploading...'}
+                      </>
+                    ) : (
+                      selectedService === 'ai' ? 'Get AI Feedback' : 'Submit Resume'
+                    )}
+                  </button>
+                </form>
               </>
             )}
           </div>
