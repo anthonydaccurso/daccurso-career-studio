@@ -7,10 +7,10 @@ import { Helmet } from 'react-helmet-async';
 
 export default function Pricing() {
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
-  const [selectedService, setSelectedService] = useState('');
+  const [selectedService, setSelectedService] = useState<{ type: string; price: string } | null>(null);
 
-  const handleBookSession = (serviceType: string) => {
-    setSelectedService(serviceType);
+  const handleBookSession = (serviceType: string, price: string) => {
+    setSelectedService({ type: serviceType, price });
     setIsBookingModalOpen(true);
   };
 
@@ -24,7 +24,6 @@ export default function Pricing() {
         />
         <link rel="canonical" href="https://daccursocareerstudio.com/pricing/" />
 
-        {/* Open Graph */}
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://daccursocareerstudio.com/pricing/" />
         <meta property="og:title" content="Pricing | Daccurso Career Studio" />
@@ -36,21 +35,7 @@ export default function Pricing() {
           property="og:image"
           content="https://nkrnbtythzdnogvtdizv.supabase.co/storage/v1/object/public/media/dcs-apple-touch-icon.png"
         />
-        <meta property="og:site_name" content="Daccurso Career Studio" />
 
-        {/* Twitter */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Pricing | Daccurso Career Studio" />
-        <meta
-          name="twitter:description"
-          content="Transparent pricing for resume, interview, and career services by Daccurso Career Studio."
-        />
-        <meta
-          name="twitter:image"
-          content="https://nkrnbtythzdnogvtdizv.supabase.co/storage/v1/object/public/media/dcs-apple-touch-icon.png"
-        />
-
-        {/* Structured Data (ProductGroup + Offers) */}
         <script type="application/ld+json">
           {`
           {
@@ -124,9 +109,11 @@ export default function Pricing() {
       </Helmet>
 
       <ParticleBackground isDashboard={false} />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* PAGE HEADER */}
         <div className="text-center mb-12 animate-slide-up">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-black via-gray-700 to-[#2d4a8f] md:from-gray-900 md:via-slate-700 md:to-[#1c336f] bg-clip-text text-transparent mb-4">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-black via-gray-700 to-[#2d4a8f] bg-clip-text text-transparent mb-4">
             Pricing
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -134,130 +121,96 @@ export default function Pricing() {
           </p>
         </div>
 
+        {/* === RESUME SERVICES === */}
         <div className="grid md:grid-cols-3 gap-8 mb-12">
+          {/* AI Resume Review */}
           <div className="bg-white border border-gray-300 rounded-lg p-8 hover:shadow-lg transition-shadow animate-slide-up animate-delay-100">
-            <div className="mb-6">
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                AI Resume Review
-              </h3>
-              <div className="flex items-baseline mb-4">
-                <span className="text-4xl font-bold text-[#1c336f]">Free</span>
-              </div>
-              <p className="text-gray-600">
-                Get instant AI-powered feedback on your resume
-              </p>
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">AI Resume Review</h3>
+            <div className="flex items-baseline mb-4">
+              <span className="text-4xl font-bold text-[#1c336f]">Free</span>
             </div>
+            <p className="text-gray-600 mb-4">Get instant AI-powered feedback on your resume.</p>
             <ul className="space-y-3 mb-8">
-              <li className="flex items-start text-gray-700">
-                <Check className="text-[#1c336f] mr-2 flex-shrink-0 mt-0.5" size={20} />
-                <span>Instant automated analysis</span>
-              </li>
-              <li className="flex items-start text-gray-700">
-                <Check className="text-[#1c336f] mr-2 flex-shrink-0 mt-0.5" size={20} />
-                <span>Format and content feedback</span>
-              </li>
-              <li className="flex items-start text-gray-700">
-                <Check className="text-[#1c336f] mr-2 flex-shrink-0 mt-0.5" size={20} />
-                <span>Keyword optimization tips</span>
-              </li>
-              <li className="flex items-start text-gray-700">
-                <Check className="text-[#1c336f] mr-2 flex-shrink-0 mt-0.5" size={20} />
-                <span>PDF or DOCX accepted</span>
-              </li>
-              <li className="flex items-start text-gray-700">
-                <Check className="text-[#1c336f] mr-2 flex-shrink-0 mt-0.5" size={20} />
-                <span>Unlimited Revisions</span>
-              </li>
+              {[
+                'Instant automated analysis',
+                'Format and content feedback',
+                'Keyword optimization tips',
+                'PDF or DOCX accepted',
+                'Unlimited revisions',
+              ].map((item, i) => (
+                <li key={i} className="flex items-start text-gray-700">
+                  <Check className="text-[#1c336f] mr-2 flex-shrink-0 mt-0.5" size={20} />
+                  <span>{item}</span>
+                </li>
+              ))}
             </ul>
             <Link
-              to="/contact"
+              to="/resume-services"
               className="w-full bg-gray-100 text-gray-900 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors inline-block text-center"
             >
               Start Free
             </Link>
           </div>
 
+          {/* Resume Rewrite */}
           <div className="bg-white border-2 border-[#1c336f] rounded-lg p-8 hover:shadow-lg transition-shadow relative animate-slide-up animate-delay-200">
-            <div className="absolute top-0 right-0 bg-[#1c336f] text-white px-4 py-1 rounded-bl-lg rounded-tr-lg text-sm font-semibold">
+            <div className="absolute top-0 right-0 bg-[#1c336f] text-white px-4 py-1 rounded-bl-lg text-sm font-semibold">
               Popular
             </div>
-            <div className="mb-6">
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                Resume Rewrite
-              </h3>
-              <div className="flex items-baseline mb-4">
-                <span className="text-4xl font-bold text-[#1c336f]">$89</span>
-              </div>
-              <p className="text-gray-600">
-                Professional resume building service with expert review
-              </p>
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">Resume Rewrite</h3>
+            <div className="flex items-baseline mb-4">
+              <span className="text-4xl font-bold text-[#1c336f]">$89</span>
             </div>
+            <p className="text-gray-600 mb-4">
+              Professional resume rewriting and optimization.
+            </p>
             <ul className="space-y-3 mb-8">
-              <li className="flex items-start text-gray-700">
-                <Check className="text-[#1c336f] mr-2 flex-shrink-0 mt-0.5" size={20} />
-                <span>Complete resume rewrite</span>
-              </li>
-              <li className="flex items-start text-gray-700">
-                <Check className="text-[#1c336f] mr-2 flex-shrink-0 mt-0.5" size={20} />
-                <span>ATS-optimized formatting</span>
-              </li>
-              <li className="flex items-start text-gray-700">
-                <Check className="text-[#1c336f] mr-2 flex-shrink-0 mt-0.5" size={20} />
-                <span>Personalized consultation</span>
-              </li>
-              <li className="flex items-start text-gray-700">
-                <Check className="text-[#1c336f] mr-2 flex-shrink-0 mt-0.5" size={20} />
-                <span>1-2 business day delivery</span>
-              </li>
-              <li className="flex items-start text-gray-700">
-                <Check className="text-[#1c336f] mr-2 flex-shrink-0 mt-0.5" size={20} />
-                <span>One round of revisions</span>
-              </li>
+              {[
+                'Complete resume rewrite',
+                'ATS-optimized formatting',
+                'Personalized consultation',
+                '1-2 business day delivery',
+                'One revision included',
+              ].map((item, i) => (
+                <li key={i} className="flex items-start text-gray-700">
+                  <Check className="text-[#1c336f] mr-2 flex-shrink-0 mt-0.5" size={20} />
+                  <span>{item}</span>
+                </li>
+              ))}
             </ul>
             <Link
-              to="/contact"
+              to="/resume-services"
               className="w-full bg-[#1c336f] text-white py-3 rounded-lg font-semibold hover:bg-[#2d4a8f] transition-colors inline-block text-center"
             >
               Get Started
             </Link>
           </div>
 
+          {/* Professional Branding */}
           <div className="bg-white border border-gray-300 rounded-lg p-8 hover:shadow-lg transition-shadow animate-slide-up animate-delay-300">
-            <div className="mb-6">
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                Professional Branding
-              </h3>
-              <div className="flex items-baseline mb-4">
-                <span className="text-4xl font-bold text-[#1c336f]">$169</span>
-              </div>
-              <p className="text-gray-600">
-                Complete application package for maximum impact
-              </p>
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">Professional Branding</h3>
+            <div className="flex items-baseline mb-4">
+              <span className="text-4xl font-bold text-[#1c336f]">$169</span>
             </div>
+            <p className="text-gray-600 mb-4">
+              Resume rewrite, cover letter, and LinkedIn optimization.
+            </p>
             <ul className="space-y-3 mb-8">
-              <li className="flex items-start text-gray-700">
-                <Check className="text-[#1c336f] mr-2 flex-shrink-0 mt-0.5" size={20} />
-                <span>Everything in Resume Rewrite</span>
-              </li>
-              <li className="flex items-start text-gray-700">
-                <Check className="text-[#1c336f] mr-2 flex-shrink-0 mt-0.5" size={20} />
-                <span>Custom cover letter template</span>
-              </li>
-              <li className="flex items-start text-gray-700">
-                <Check className="text-[#1c336f] mr-2 flex-shrink-0 mt-0.5" size={20} />
-                <span>LinkedIn Profile Changes</span>
-              </li>
-              <li className="flex items-start text-gray-700">
-                <Check className="text-[#1c336f] mr-2 flex-shrink-0 mt-0.5" size={20} />
-                <span>3-4 business day delivery</span>
-              </li>
-              <li className="flex items-start text-gray-700">
-                <Check className="text-[#1c336f] mr-2 flex-shrink-0 mt-0.5" size={20} />
-                <span>One round of revisions</span>
-              </li>
+              {[
+                'Everything in Resume Rewrite',
+                'Custom cover letter',
+                'LinkedIn profile updates',
+                '3-4 day delivery',
+                'One revision included',
+              ].map((item, i) => (
+                <li key={i} className="flex items-start text-gray-700">
+                  <Check className="text-[#1c336f] mr-2 flex-shrink-0 mt-0.5" size={20} />
+                  <span>{item}</span>
+                </li>
+              ))}
             </ul>
             <Link
-              to="/contact"
+              to="/resume-services"
               className="w-full bg-gray-100 text-gray-900 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors inline-block text-center"
             >
               Upgrade Now
@@ -265,158 +218,72 @@ export default function Pricing() {
           </div>
         </div>
 
+        {/* === INTERVIEW & CAREER SERVICES === */}
         <div className="bg-white border border-gray-300 rounded-lg p-8 mb-8 animate-slide-up animate-delay-400">
           <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
             Interview & Career Services
           </h2>
+
           <div className="grid md:grid-cols-2 gap-8">
-            <div className="border border-gray-200 rounded-lg p-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-2">
-                Mock Interview Session
-              </h3>
-              <div className="flex items-baseline mb-4">
-                <span className="text-3xl font-bold text-[#1c336f]">$49</span>
-                <span className="text-gray-600 ml-2">/ session</span>
-              </div>
-              <ul className="space-y-2 mb-4">
-                <li className="flex items-start text-gray-700">
-                  <Check className="text-[#1c336f] mr-2 flex-shrink-0 mt-0.5" size={18} />
-                  <span>15-30 minute one-on-one session</span>
-                </li>
-                <li className="flex items-start text-gray-700">
-                  <Check className="text-[#1c336f] mr-2 flex-shrink-0 mt-0.5" size={18} />
-                  <span>Industry-specific questions</span>
-                </li>
-                <li className="flex items-start text-gray-700">
-                  <Check className="text-[#1c336f] mr-2 flex-shrink-0 mt-0.5" size={18} />
-                  <span>Recording provided for review</span>
-                </li>
-                <li className="flex items-start text-gray-700">
-                  <Check className="text-[#1c336f] mr-2 flex-shrink-0 mt-0.5" size={18} />
-                  <span>Detailed written feedback</span>
-                </li>
-              </ul>
-              <button
-                onClick={() => handleBookSession('Mock Interview Session')}
-                className="w-full bg-[#1c336f] text-white py-2 rounded-lg font-semibold hover:bg-[#2d4a8f] transition-colors"
-              >
-                Book Mock Interview
-              </button>
-            </div>
+            <ServiceCard
+              title="Mock Interview Session"
+              price="$49"
+              description="15–30 minute realistic interview with tailored feedback."
+              features={[
+                'Industry-specific questions',
+                'Recorded for review',
+                'Detailed written feedback',
+              ]}
+              onBook={() => handleBookSession('Mock Interview Session', '$49')}
+            />
 
-            <div className="border border-gray-200 rounded-lg p-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-2">
-                Interview Strategy Session
-              </h3>
-              <div className="flex items-baseline mb-4">
-                <span className="text-3xl font-bold text-[#1c336f]">$39</span>
-                <span className="text-gray-600 ml-2">/ session</span>
-              </div>
-              <ul className="space-y-2 mb-4">
-                <li className="flex items-start text-gray-700">
-                  <Check className="text-[#1c336f] mr-2 flex-shrink-0 mt-0.5" size={18} />
-                  <span>15-30 minute consultation</span>
-                </li>
-                <li className="flex items-start text-gray-700">
-                  <Check className="text-[#1c336f] mr-2 flex-shrink-0 mt-0.5" size={18} />
-                  <span>Company research guidance</span>
-                </li>
-                <li className="flex items-start text-gray-700">
-                  <Check className="text-[#1c336f] mr-2 flex-shrink-0 mt-0.5" size={18} />
-                  <span>Question preparation framework</span>
-                </li>
-                <li className="flex items-start text-gray-700">
-                  <Check className="text-[#1c336f] mr-2 flex-shrink-0 mt-0.5" size={18} />
-                  <span>Follow-up strategy</span>
-                </li>
-              </ul>
-              <button
-                onClick={() => handleBookSession('Interview Strategy Session')}
-                className="w-full bg-[#1c336f] text-white py-2 rounded-lg font-semibold hover:bg-[#2d4a8f] transition-colors"
-              >
-                Book Strategy Session
-              </button>
-            </div>
+            <ServiceCard
+              title="Interview Strategy Session"
+              price="$39"
+              description="Coaching to develop a winning interview approach."
+              features={[
+                'Company research techniques',
+                'STAR method coaching',
+                'Follow-up strategies',
+              ]}
+              onBook={() => handleBookSession('Interview Strategy Session', '$39')}
+            />
 
-            <div className="border border-gray-200 rounded-lg p-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-2">
-                Career Strategy Consultation
-              </h3>
-              <div className="flex items-baseline mb-4">
-                <span className="text-3xl font-bold text-[#1c336f]">$69</span>
-                <span className="text-gray-600 ml-2">/ session</span>
-              </div>
-              <ul className="space-y-2 mb-4">
-                <li className="flex items-start text-gray-700">
-                  <Check className="text-[#1c336f] mr-2 flex-shrink-0 mt-0.5" size={18} />
-                  <span>30-45 minute in-depth consultation</span>
-                </li>
-                <li className="flex items-start text-gray-700">
-                  <Check className="text-[#1c336f] mr-2 flex-shrink-0 mt-0.5" size={18} />
-                  <span>Career path planning</span>
-                </li>
-                <li className="flex items-start text-gray-700">
-                  <Check className="text-[#1c336f] mr-2 flex-shrink-0 mt-0.5" size={18} />
-                  <span>Industry transition advice</span>
-                </li>
-                <li className="flex items-start text-gray-700">
-                  <Check className="text-[#1c336f] mr-2 flex-shrink-0 mt-0.5" size={18} />
-                  <span>Personalized action plan</span>
-                </li>
-              </ul>
-              <button
-                onClick={() => handleBookSession('Career Strategy Consultation')}
-                className="w-full bg-[#1c336f] text-white py-2 rounded-lg font-semibold hover:bg-[#2d4a8f] transition-colors"
-              >
-                Book Career Consulation
-              </button>
-            </div>
+            <ServiceCard
+              title="Career Strategy Consultation"
+              price="$69"
+              description="Personalized guidance for planning your career path."
+              features={[
+                'Career path planning',
+                'Industry transition advice',
+                '30–45 minute consultation',
+              ]}
+              onBook={() => handleBookSession('Career Strategy Consultation', '$69')}
+            />
 
-            <div className="border border-gray-200 rounded-lg p-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-2">
-                Salary Negotiation Coaching
-              </h3>
-              <div className="flex items-baseline mb-4">
-                <span className="text-3xl font-bold text-[#1c336f]">$59</span>
-                <span className="text-gray-600 ml-2">/ session</span>
-              </div>
-              <ul className="space-y-2 mb-4">
-                <li className="flex items-start text-gray-700">
-                  <Check className="text-[#1c336f] mr-2 flex-shrink-0 mt-0.5" size={18} />
-                  <span>30-45 minute coaching session</span>
-                </li>
-                <li className="flex items-start text-gray-700">
-                  <Check className="text-[#1c336f] mr-2 flex-shrink-0 mt-0.5" size={18} />
-                  <span>Market research guidance</span>
-                </li>
-                <li className="flex items-start text-gray-700">
-                  <Check className="text-[#1c336f] mr-2 flex-shrink-0 mt-0.5" size={18} />
-                  <span>Negotiation scripts and phrases</span>
-                </li>
-                <li className="flex items-start text-gray-700">
-                  <Check className="text-[#1c336f] mr-2 flex-shrink-0 mt-0.5" size={18} />
-                  <span>Counter-offer strategies</span>
-                </li>
-              </ul>
-              <button
-                onClick={() => handleBookSession('Salary Negotiation Coaching')}
-                className="w-full bg-[#1c336f] text-white py-2 rounded-lg font-semibold hover:bg-[#2d4a8f] transition-colors"
-              >
-                Book Coaching Session
-              </button>
-            </div>
+            <ServiceCard
+              title="Salary Negotiation Coaching"
+              price="$59"
+              description="Learn to confidently negotiate salary & benefits."
+              features={[
+                'Market research insights',
+                'Negotiation scripts and phrases',
+                'Counter-offer strategies',
+              ]}
+              onBook={() => handleBookSession('Salary Negotiation Coaching', '$59')}
+            />
           </div>
         </div>
 
+        {/* === CUSTOM PACKAGE === */}
         <div className="bg-gradient-to-br from-[#1c336f] to-[#2d4a8f] text-white rounded-lg p-8 text-center animate-slide-up animate-delay-500">
           <div className="flex items-center justify-center mb-4">
             <Sparkles className="mr-2" size={28} />
-            <h2 className="text-3xl font-bold">
-              Need a Custom Package?
-            </h2>
+            <h2 className="text-3xl font-bold">Need a Custom Package?</h2>
           </div>
           <p className="text-gray-100 mb-6 max-w-2xl mx-auto">
-            Looking for ongoing support or a combination of services? Contact me to create a personalized package that fits your needs and budget.
+            Looking for ongoing support or a combination of services? Contact me to create a
+            personalized package that fits your goals and budget.
           </p>
           <Link
             to="/contact"
@@ -427,11 +294,53 @@ export default function Pricing() {
         </div>
       </div>
 
+      {/* === BOOKING MODAL === */}
       <BookingModal
         isOpen={isBookingModalOpen}
         onClose={() => setIsBookingModalOpen(false)}
-        serviceType={selectedService}
+        serviceType={selectedService?.type || ''}
+        price={selectedService?.price || ''}
       />
+    </div>
+  );
+}
+
+/* === Subcomponent for service cards === */
+function ServiceCard({
+  title,
+  price,
+  description,
+  features,
+  onBook,
+}: {
+  title: string;
+  price: string;
+  description: string;
+  features: string[];
+  onBook: () => void;
+}) {
+  return (
+    <div className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+      <h3 className="text-xl font-bold text-gray-900 mb-2">{title}</h3>
+      <div className="flex items-baseline mb-4">
+        <span className="text-3xl font-bold text-[#1c336f]">{price}</span>
+        <span className="text-gray-600 ml-2">/ session</span>
+      </div>
+      <p className="text-gray-600 mb-4">{description}</p>
+      <ul className="space-y-2 mb-6">
+        {features.map((f, i) => (
+          <li key={i} className="flex items-start text-gray-700">
+            <Check className="text-[#1c336f] mr-2 flex-shrink-0 mt-0.5" size={18} />
+            <span>{f}</span>
+          </li>
+        ))}
+      </ul>
+      <button
+        onClick={onBook}
+        className="w-full bg-[#1c336f] text-white py-2 rounded-lg font-semibold hover:bg-[#2d4a8f] transition-colors"
+      >
+        Book Now
+      </button>
     </div>
   );
 }
