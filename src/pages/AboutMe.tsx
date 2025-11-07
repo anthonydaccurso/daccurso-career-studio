@@ -7,7 +7,7 @@ export default function AboutMe() {
   return (
     <div className="min-h-screen bg-gray-50 py-12 relative">
       <Helmet>
-        <title>About Anthony Daccurso | Founder of Daccurso Career Studio</title>
+        <title>Anthony Daccurso | Daccurso Career Studio</title>
         <meta
           name="description"
           content="Learn about Anthony Daccurso — digital marketer, web developer, and founder of Daccurso Career Studio. Dedicated to helping students and professionals succeed."
@@ -17,7 +17,7 @@ export default function AboutMe() {
         {/* Open Graph */}
         <meta property="og:type" content="profile" />
         <meta property="og:url" content="https://daccursocareerstudio.com/about/" />
-        <meta property="og:title" content="About Anthony Daccurso | Founder of Daccurso Career Studio" />
+        <meta property="og:title" content="Anthony Daccurso | Daccurso Career Studio" />
         <meta
           property="og:description"
           content="Driven to help students and emerging professionals navigate their career paths with confidence. Learn more about Anthony Daccurso's story."
@@ -30,7 +30,7 @@ export default function AboutMe() {
 
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="About Anthony Daccurso | Founder of Daccurso Career Studio" />
+        <meta name="twitter:title" content="Anthony Daccurso | Daccurso Career Studio" />
         <meta
           name="twitter:description"
           content="Anthony Daccurso is a career strategist and digital marketer helping young professionals succeed through resume and interview mastery."
