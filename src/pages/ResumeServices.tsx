@@ -143,7 +143,7 @@ export default function ResumeServices() {
         <link rel="canonical" href="https://daccursocareerstudio.com/resume-services" />
 
         <meta property="og:type" content="service" />
-        <meta property="og:title" content="Resume Writing & AI Feedback | Daccurso Career Studio" />
+        <meta property="og:title" content="Resume Services | Daccurso Career Studio" />
         <meta property="og:description" content="Professional resume services with AI or manual expert review. Fast turnaround and tailored career feedback." />
         <meta property="og:image" content="https://bvevrurqtidadhfsuoee.supabase.co/storage/v1/object/public/media/dcs-apple-touch-icon.png" />
 
