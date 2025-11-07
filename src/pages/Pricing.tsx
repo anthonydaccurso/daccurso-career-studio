@@ -17,7 +17,7 @@ export default function Pricing() {
   return (
     <div className="min-h-screen bg-gray-50 py-12 relative">
       <Helmet>
-        <title>Pricing | Resume Writing, Coaching & Career Services</title>
+        <title>Pricing | Daccurso Career Studio</title>
         <meta
           name="description"
           content="Transparent, competitive pricing for resume rewrites, interview coaching, and professional branding services by Daccurso Career Studio."
@@ -27,7 +27,7 @@ export default function Pricing() {
         {/* Open Graph */}
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://daccursocareerstudio.com/pricing/" />
-        <meta property="og:title" content="Pricing | Resume Writing, Coaching & Career Services" />
+        <meta property="og:title" content="Pricing | Daccurso Career Studio" />
         <meta
           property="og:description"
           content="Compare plans for resume rewrites, AI reviews, interview strategy, and professional branding — all designed to help you stand out."
@@ -40,7 +40,7 @@ export default function Pricing() {
 
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Pricing | Resume Writing, Coaching & Career Services" />
+        <meta name="twitter:title" content="Pricing | Daccurso Career Studio" />
         <meta
           name="twitter:description"
           content="Transparent pricing for resume, interview, and career services by Daccurso Career Studio."
