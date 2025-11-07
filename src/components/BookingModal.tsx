@@ -38,6 +38,7 @@ export default function BookingModal({ isOpen, onClose, serviceType }: BookingMo
             email: formData.email,
             phone: formData.phone,
             service_type: serviceType,
+            industry: formData.industry,
             desired_date: formattedDate,
             desired_time: formData.desiredTime,
             status: 'new'
