@@ -80,38 +80,68 @@ export default function ResumeServices() {
         setComments('');
       }
 
-      // Handle AI Service
+      // Handle AI Service using XMLHttpRequest for better FormData support
       if (selectedService === 'ai') {
-        const base64File = await new Promise<string>((resolve, reject) => {
-          const reader = new FileReader();
-          reader.readAsDataURL(file);
-          reader.onload = () => resolve(reader.result as string);
-          reader.onerror = reject;
-        });
-
-        const response = await fetch(
-          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/analyze-resume`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-            },
-            body: JSON.stringify({
-              resumeText: '',
-              file_name: file.name,
-              file_data: base64File,
-              file_size: file.size,
-            }),
+        await new Promise<void>((resolve, reject) => {
+          const formData = new FormData();
+          formData.append('file', file, file.name);
+          
+          if (comments) {
+            formData.append('comments', comments);
           }
-        );
 
+          const xhr = new XMLHttpRequest();
+          
+          xhr.upload.addEventListener('progress', (e) => {
+            if (e.lengthComputable) {
+              const percentComplete = (e.loaded / e.total) * 100;
+              console.log(`Upload progress: ${percentComplete.toFixed(0)}%`);
+            }
+          });
 
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error || 'AI analysis failed.');
+          xhr.addEventListener('load', () => {
+            if (xhr.status >= 200 && xhr.status < 300) {
+              try {
+                const data = JSON.parse(xhr.responseText);
+                setAiFeedback(data.feedback || 'No feedback generated');
+                setUploadStatus('success');
+                resolve();
+              } catch (error) {
+                console.error('Parse error:', error);
+                reject(new Error('Invalid response from server'));
+              }
+            } else {
+              try {
+                const errorData = JSON.parse(xhr.responseText);
+                console.error('Server error:', errorData);
+                reject(new Error(errorData.error || `Server error: ${xhr.status}`));
+              } catch {
+                reject(new Error(`Server error: ${xhr.status} - ${xhr.responseText}`));
+              }
+            }
+          });
 
-        setAiFeedback(data.feedback || 'No feedback generated');
-        setUploadStatus('success');
+          xhr.addEventListener('error', () => {
+            console.error('Network error');
+            reject(new Error('Network error occurred. Please check your connection.'));
+          });
+
+          xhr.addEventListener('abort', () => {
+            reject(new Error('Upload was cancelled'));
+          });
+
+          xhr.open('POST', `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/analyze-resume`);
+          xhr.setRequestHeader('Authorization', `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`);
+          xhr.setRequestHeader('apikey', import.meta.env.VITE_SUPABASE_ANON_KEY);
+          
+          console.log('Sending file:', {
+            name: file.name,
+            size: file.size,
+            type: file.type,
+          });
+          
+          xhr.send(formData);
+        });
       }
     } catch (error) {
       console.error('Error submitting resume:', error);
