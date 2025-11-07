@@ -2,33 +2,37 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import mammoth from "npm:mammoth";
 import pdfParse from "npm:pdf-parse";
 
-// --- Universal CORS config (static whitelist + fallback)
+// Strict CORS whitelist for your exact frontend domain
 const ALLOWED_ORIGINS = [
   "https://daccursocareerstudio.com",
   "https://www.daccursocareerstudio.com",
-  "http://localhost:5173",
+  "http://localhost:5173", // optional for local dev
   "http://localhost:3000",
 ];
 
 Deno.serve(async (req) => {
   const origin = req.headers.get("origin") || "";
-  const allowOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  const allowOrigin = ALLOWED_ORIGINS.includes(origin)
+    ? origin
+    : "https://daccursocareerstudio.com";
 
   const corsHeaders = {
     "Access-Control-Allow-Origin": allowOrigin,
     "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Client-Info, apikey",
+    "Access-Control-Allow-Headers":
+      "Content-Type, Authorization, X-Client-Info, apikey",
     "Access-Control-Allow-Private-Network": "true",
     "Access-Control-Max-Age": "86400",
   };
 
-  // Return 200 on preflight so Chrome accepts it
+  // Return proper preflight response (required for Supabase)
   if (req.method === "OPTIONS") {
     return new Response("ok", { status: 200, headers: corsHeaders });
   }
 
   try {
     const { file_name, file_data, file_size } = await req.json();
+
     if (!file_data) {
       return new Response(JSON.stringify({ error: "Missing file data." }), {
         status: 400,
@@ -36,11 +40,11 @@ Deno.serve(async (req) => {
       });
     }
 
-    // --- Decode base64 file bytes
+    // --- Decode base64 bytes
     const base64Data = file_data.split(",")[1];
     const fileBytes = Uint8Array.from(atob(base64Data), (c) => c.charCodeAt(0));
 
-    // --- Extract text for AI
+    // --- Extract text
     let resumeText = "";
     if (file_name.toLowerCase().endsWith(".pdf")) {
       const parsed = await pdfParse(fileBytes);
@@ -50,36 +54,43 @@ Deno.serve(async (req) => {
       resumeText = result.value;
     } else {
       return new Response(
-        JSON.stringify({ error: "Unsupported file type. Upload DOCX or PDF only." }),
+        JSON.stringify({ error: "Only DOCX or PDF are supported." }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
     if (!resumeText || resumeText.trim().length < 50) {
       return new Response(
-        JSON.stringify({ error: "Extracted text too short or unreadable." }),
+        JSON.stringify({ error: "File appears empty or unreadable." }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    // --- OpenAI analysis
+    // --- AI feedback
     const openaiApiKey = Deno.env.get("OPENAI_API_KEY");
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+
     if (!openaiApiKey || !supabaseUrl || !supabaseKey)
       throw new Error("Missing environment variables.");
 
-    const payload = {
-      model: "gpt-4o-mini",
-      messages: [
-        {
-          role: "system",
-          content:
-            "You are an expert resume reviewer. Provide detailed, structured, professional feedback in plain text only.",
-        },
-        {
-          role: "user",
-          content: `Analyze this resume and give feedback under:
+    const aiRequest = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${openaiApiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are an expert resume reviewer. Provide professional, plain-text feedback without markdown formatting.",
+          },
+          {
+            role: "user",
+            content: `Analyze this resume and give feedback under:
 1. Overall Impression (score)
 2. Formatting & Layout
 3. Content Quality
@@ -90,28 +101,23 @@ Deno.serve(async (req) => {
 
 Resume:
 ${resumeText}`,
-        },
-      ],
-      temperature: 0.7,
-      max_tokens: 1800,
-    };
-
-    const aiResponse = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: { Authorization: `Bearer ${openaiApiKey}`, "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
+          },
+        ],
+        temperature: 0.7,
+        max_tokens: 1800,
+      }),
     });
 
-    if (!aiResponse.ok) {
-      const errText = await aiResponse.text();
+    if (!aiRequest.ok) {
+      const errText = await aiRequest.text();
       console.error("OpenAI API error:", errText);
-      throw new Error("OpenAI API request failed.");
+      throw new Error("OpenAI request failed.");
     }
 
-    const data = await aiResponse.json();
+    const data = await aiRequest.json();
     const feedback = data?.choices?.[0]?.message?.content || "No feedback generated.";
 
-    // --- Upload original file to feedback/feedback/
+    // --- Upload file to feedback/feedback/
     const filePath = `feedback/${file_name}`;
     const uploadRes = await fetch(`${supabaseUrl}/storage/v1/object/feedback/${filePath}`, {
       method: "POST",
@@ -126,7 +132,7 @@ ${resumeText}`,
     if (!uploadRes.ok) {
       const errText = await uploadRes.text();
       console.error("Upload failed:", errText);
-      throw new Error("Failed to upload file.");
+      throw new Error("Failed to upload to feedback bucket.");
     }
 
     // --- Insert DB record
@@ -150,10 +156,9 @@ ${resumeText}`,
     if (!insertRes.ok) {
       const errText = await insertRes.text();
       console.error("DB insert failed:", errText);
-      throw new Error("Database insert error.");
+      throw new Error("Failed to insert record into ai_resume_feedback.");
     }
 
-    // --- Success
     return new Response(JSON.stringify({ feedback }), {
       status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
