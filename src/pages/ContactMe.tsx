@@ -65,7 +65,7 @@ export default function ContactMe() {
         <meta property="og:type" content="website" />
         <meta property="og:title" content="Contact Daccurso Career Studio" />
         <meta property="og:description" content="Reach out for resume rewrites, interview prep, or custom career support packages." />
-        <meta property="og:image" content="https://bvevrurqtidadhfsuoee.supabase.co/storage/v1/object/public/media/dcs-apple-touch-icon.png" />
+        <meta property="og:image" content="https://nkrnbtythzdnogvtdizv.supabase.co/storage/v1/object/public/media/dcs-apple-touch-icon.png" />
 
         <script type="application/ld+json">
           {`
