@@ -27,7 +27,7 @@ Deno.serve(async (req) => {
     const base64Data = file_data.split(",")[1];
     const fileBytes = Uint8Array.from(atob(base64Data), (c) => c.charCodeAt(0));
 
-    // ✅ Extract text depending on file type
+    // Extract text depending on file type
     let resumeText = "";
     if (file_name.endsWith(".pdf")) {
       const parsed = await pdfParse(fileBytes);
@@ -49,7 +49,7 @@ Deno.serve(async (req) => {
       );
     }
 
-    // ✅ AI Feedback
+    // AI Feedback
     const openaiApiKey = Deno.env.get("OPENAI_API_KEY");
     if (!openaiApiKey) throw new Error("Missing OpenAI API key");
 
@@ -98,7 +98,7 @@ ${resumeText}`,
     const data = await aiResponse.json();
     const feedback = data?.choices?.[0]?.message?.content || "No feedback generated.";
 
-    // ✅ Save to Supabase
+    // Save to Supabase
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
