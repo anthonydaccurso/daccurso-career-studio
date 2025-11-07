@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Upload, Sparkles, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/supabaseClient';
 import ParticleBackground from '../components/ParticleBackground';
 import { Helmet } from "react-helmet-async";
 

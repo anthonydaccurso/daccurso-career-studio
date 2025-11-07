@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { LogOut, Users, FileText, MessageSquare, Download, TrendingUp, Calendar } from 'lucide-react';
 import { useAdminAuth } from '../contexts/AdminAuthContext';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/supabaseClient';
 import ParticleBackground from '../components/ParticleBackground';
 
 interface ResumeSubmission {
