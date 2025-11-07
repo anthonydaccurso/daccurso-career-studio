@@ -44,7 +44,7 @@ export default function BlogPost() {
         <meta property="og:description" content={post.excerpt} />
         <meta
           property="og:image"
-          content="https://bvevrurqtidadhfsuoee.supabase.co/storage/v1/object/public/media/dcs-apple-touch-icon.png"
+          content="https://nkrnbtythzdnogvtdizv.supabase.co/storage/v1/object/public/media/dcs-apple-touch-icon.png"
         />
         <meta property="article:published_time" content={post.date} />
         <meta property="article:author" content="Anthony Daccurso" />
@@ -63,7 +63,7 @@ export default function BlogPost() {
               "name": "Daccurso Career Studio",
               "logo": {
                 "@type": "ImageObject",
-                "url": "https://bvevrurqtidadhfsuoee.supabase.co/storage/v1/object/public/media/dcs-apple-touch-icon.png"
+                "url": "https://nkrnbtythzdnogvtdizv.supabase.co/storage/v1/object/public/media/dcs-apple-touch-icon.png"
               }
             },
             "description": post.excerpt,
