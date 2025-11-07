@@ -26,19 +26,19 @@ export default function BookingModal({ isOpen, onClose, serviceType }: BookingMo
     setIsSubmitting(true);
     setSubmitMessage('');
 
-    try {
-      const { error } = await supabase
-        .from('booking_submissions')
-        .insert([
-          {
-            name: formData.name,
-            email: formData.email,
-            phone: formData.phone,
-            service_type: serviceType,
-            desired_date: formData.desiredDate,
-            desired_time: formData.desiredTime
-          }
-        ]);
+  const { error } = await supabase
+    .from('booking_submissions')
+    .insert([
+      {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        service_type: serviceType,
+        desired_date: formattedDate, // formatted properly
+        desired_time: formData.desiredTime,
+        status: 'new', // optional but good practice
+      },
+    ]);
 
       if (error) throw error;
 
