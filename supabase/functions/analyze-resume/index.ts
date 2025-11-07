@@ -1,6 +1,7 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
-import mammoth from "npm:mammoth";
-import pdfParse from "npm:pdf-parse";
+import { createClient } from "npm:@supabase/supabase-js@2";
+import mammoth from "npm:mammoth@1.8.0";
+import pdfParse from "npm:pdf-parse@1.1.1";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "https://daccursocareerstudio.com",
@@ -10,26 +11,21 @@ const corsHeaders = {
 };
 
 Deno.serve(async (req) => {
-  // Handle CORS preflight requests
+  // Handle CORS preflight
   if (req.method === "OPTIONS") {
     return new Response("ok", {
       status: 200,
-      headers: {
-        "Access-Control-Allow-Origin": "https://daccursocareerstudio.com",
-        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type, Authorization, apikey, X-Client-Info",
-        "Access-Control-Max-Age": "86400",
-      },
+      headers: corsHeaders,
     });
   }
 
   try {
-    // Expect multipart/form-data
-    const form = await req.formData();
-    const file = form.get("file") as File | null;
+    // Parse form data
+    const formData = await req.formData();
+    const file = formData.get("file") as File | null;
 
     if (!file) {
-      return new Response(JSON.stringify({ error: "Missing file upload." }), {
+      return new Response(JSON.stringify({ error: "No file provided" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -40,37 +36,47 @@ Deno.serve(async (req) => {
     const arrayBuffer = await file.arrayBuffer();
     const fileBytes = new Uint8Array(arrayBuffer);
 
-    // Extract text from file
+    // Extract text based on file type
     let resumeText = "";
-    if (fileName.toLowerCase().endsWith(".pdf")) {
+    const lowerName = fileName.toLowerCase();
+
+    if (lowerName.endsWith(".pdf")) {
       const parsed = await pdfParse(fileBytes);
       resumeText = parsed.text;
-    } else if (fileName.toLowerCase().endsWith(".docx")) {
+    } else if (lowerName.endsWith(".docx")) {
       const result = await mammoth.extractRawText({ buffer: fileBytes });
       resumeText = result.value;
     } else {
-      return new Response(JSON.stringify({ error: "Only DOCX or PDF supported." }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return new Response(
+        JSON.stringify({ error: "Only PDF or DOCX files are supported." }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
     }
 
+    // Validate extracted text
     if (!resumeText || resumeText.trim().length < 50) {
-      return new Response(JSON.stringify({ error: "File unreadable or too short." }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return new Response(
+        JSON.stringify({ error: "File is unreadable or too short." }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
     }
 
-    // Send text to OpenAI
+    // Get environment variables
     const openaiKey = Deno.env.get("OPENAI_API_KEY");
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
     if (!openaiKey || !supabaseUrl || !supabaseKey) {
-      throw new Error("Missing environment variables.");
+      throw new Error("Missing required environment variables");
     }
 
+    // Call OpenAI API
     const aiResponse = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -83,88 +89,99 @@ Deno.serve(async (req) => {
           {
             role: "system",
             content:
-              "You are an expert resume reviewer. Provide detailed, structured feedback in plain text (no markdown).",
+              "You are an expert resume reviewer and hiring manager. Provide detailed, structured feedback in plain text (no markdown formatting).",
           },
           {
             role: "user",
-            content: `Analyze this resume under:
-1. Overall Impression (score)
+            content: `Analyze this resume and provide feedback under these categories:
+
+1. Overall Impression (score out of 10)
 2. Formatting & Layout
 3. Content Quality
 4. ATS Optimization
-5. Strengths
+5. Key Strengths
 6. Areas for Improvement
-7. Recommendations
+7. Specific Recommendations
 
 Resume:
 ${resumeText}`,
           },
         ],
         temperature: 0.7,
-        max_tokens: 1800,
+        max_tokens: 2000,
       }),
     });
 
     if (!aiResponse.ok) {
       const errText = await aiResponse.text();
       console.error("OpenAI API error:", errText);
-      throw new Error("Failed to analyze resume.");
+      throw new Error("Failed to analyze resume with AI");
     }
 
-    const data = await aiResponse.json();
-    const feedback = data?.choices?.[0]?.message?.content || "No feedback generated.";
+    const aiData = await aiResponse.json();
+    const feedback = aiData?.choices?.[0]?.message?.content || "No feedback generated.";
 
-    // Upload file to feedback bucket
-    const filePath = `feedback/${fileName}`;
-    const uploadRes = await fetch(`${supabaseUrl}/storage/v1/object/feedback/${filePath}`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${supabaseKey}`,
-        apikey: supabaseKey,
-        "Content-Type": "application/octet-stream",
-      },
-      body: fileBytes,
-    });
+    // Initialize Supabase client
+    const supabase = createClient(supabaseUrl, supabaseKey);
 
-    if (!uploadRes.ok) {
-      const err = await uploadRes.text();
-      console.error("Upload error:", err);
-      throw new Error("Failed to upload file to feedback bucket.");
+    // Generate unique file path with timestamp
+    const timestamp = new Date().getTime();
+    const fileExtension = lowerName.endsWith(".pdf") ? "pdf" : "docx";
+    const uniqueFileName = `${timestamp}_${fileName}`;
+    const filePath = `feedback/${uniqueFileName}`;
+
+    // Upload file to Supabase Storage
+    const { error: uploadError } = await supabase.storage
+      .from("feedback")
+      .upload(filePath, fileBytes, {
+        contentType: file.type,
+        upsert: false,
+      });
+
+    if (uploadError) {
+      console.error("Storage upload error:", uploadError);
+      throw new Error(`Failed to upload file: ${uploadError.message}`);
     }
 
-    // Insert record into ai_resume_feedback
-    const insertRes = await fetch(`${supabaseUrl}/rest/v1/ai_resume_feedback`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${supabaseKey}`,
-        apikey: supabaseKey,
-        Prefer: "return=representation",
-      },
-      body: JSON.stringify({
+    // Insert record into database
+    const { error: dbError } = await supabase
+      .from("ai_resume_feedback")
+      .insert({
         file_name: fileName,
         file_size: fileSize,
         ai_feedback: feedback,
         bucket_name: "feedback",
         file_path: filePath,
-      }),
-    });
+        status: "completed",
+      });
 
-    if (!insertRes.ok) {
-      const errText = await insertRes.text();
-      console.error("Database insert error:", errText);
-      throw new Error("Failed to log feedback in database.");
+    if (dbError) {
+      console.error("Database insert error:", dbError);
+      throw new Error(`Failed to save feedback: ${dbError.message}`);
     }
 
-    return new Response(JSON.stringify({ feedback }), {
-      status: 200,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    // Return success response
+    return new Response(
+      JSON.stringify({
+        success: true,
+        feedback,
+        filePath,
+      }),
+      {
+        status: 200,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      }
+    );
   } catch (error) {
     console.error("Analyze Resume Error:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({
+        error: error instanceof Error ? error.message : "Unknown error occurred",
+      }),
+      {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      }
+    );
   }
 });
