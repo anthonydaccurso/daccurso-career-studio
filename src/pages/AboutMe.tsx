@@ -3,68 +3,68 @@ import { Link } from 'react-router-dom';
 import ParticleBackground from '../components/ParticleBackground';
 import { Helmet } from "react-helmet-async";
 
-<Helmet>
-  <title>Anthony Daccurso | Daccurso Career Studio</title>
-  <meta
-    name="description"
-    content="Learn about Anthony Daccurso — digital marketer, web developer, and founder of Daccurso Career Studio. Dedicated to helping students and professionals succeed."
-  />
-  <link rel="canonical" href="https://daccursocareerstudio.com/about/" />
-
-  {/* Open Graph */}
-  <meta property="og:type" content="profile" />
-  <meta property="og:url" content="https://daccursocareerstudio.com/about/" />
-  <meta property="og:title" content="Anthony Daccurso | Daccurso Career Studio" />
-  <meta
-    property="og:description"
-    content="Driven to help students and emerging professionals navigate their career paths with confidence. Learn more about Anthony Daccurso's story."
-  />
-  <meta
-    property="og:image"
-    content="https://bvevrurqtidadhfsuoee.supabase.co/storage/v1/object/public/media/anthony-daccurso-fcp.webp"
-  />
-  <meta property="og:site_name" content="Daccurso Career Studio" />
-
-  {/* Twitter */}
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Anthony Daccurso | Daccurso Career Studio" />
-  <meta
-    name="twitter:description"
-    content="Anthony Daccurso is a career strategist and digital marketer helping young professionals succeed through resume and interview mastery."
-  />
-  <meta
-    name="twitter:image"
-    content="https://bvevrurqtidadhfsuoee.supabase.co/storage/v1/object/public/media/anthony-daccurso-fcp.webp"
-  />
-
-  {/* Person + Organization Schema */}
-  <script type="application/ld+json">
-    {`
-    {
-      "@context": "https://schema.org",
-      "@type": "Person",
-      "name": "Anthony Daccurso",
-      "jobTitle": "Founder & Career Coach",
-      "image": "https://bvevrurqtidadhfsuoee.supabase.co/storage/v1/object/public/media/anthony-daccurso-fcp.webp",
-      "url": "https://daccursocareerstudio.com/about",
-      "description": "Digital marketer and web developer helping students and professionals build impactful careers through resume writing and coaching.",
-      "worksFor": {
-        "@type": "Organization",
-        "name": "Daccurso Career Studio",
-        "url": "https://daccursocareerstudio.com"
-      },
-      "sameAs": [
-        "https://linkedin.com/in/anthony-daccurso",
-        "https://github.com/anthonydaccurso"
-      ]
-    }
-    `}
-  </script>
-</Helmet>
-
 export default function AboutMe() {
   return (
     <div className="min-h-screen bg-gray-50 py-12 relative">
+      <Helmet>
+        <title>About Anthony Daccurso | Founder of Daccurso Career Studio</title>
+        <meta
+          name="description"
+          content="Learn about Anthony Daccurso — digital marketer, web developer, and founder of Daccurso Career Studio. Dedicated to helping students and professionals succeed."
+        />
+        <link rel="canonical" href="https://daccursocareerstudio.com/about/" />
+
+        {/* Open Graph */}
+        <meta property="og:type" content="profile" />
+        <meta property="og:url" content="https://daccursocareerstudio.com/about/" />
+        <meta property="og:title" content="About Anthony Daccurso | Founder of Daccurso Career Studio" />
+        <meta
+          property="og:description"
+          content="Driven to help students and emerging professionals navigate their career paths with confidence. Learn more about Anthony Daccurso's story."
+        />
+        <meta
+          property="og:image"
+          content="https://bvevrurqtidadhfsuoee.supabase.co/storage/v1/object/public/media/anthony-daccurso-fcp.webp"
+        />
+        <meta property="og:site_name" content="Daccurso Career Studio" />
+
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="About Anthony Daccurso | Founder of Daccurso Career Studio" />
+        <meta
+          name="twitter:description"
+          content="Anthony Daccurso is a career strategist and digital marketer helping young professionals succeed through resume and interview mastery."
+        />
+        <meta
+          name="twitter:image"
+          content="https://bvevrurqtidadhfsuoee.supabase.co/storage/v1/object/public/media/anthony-daccurso-fcp.webp"
+        />
+
+        {/* Person + Organization Schema */}
+        <script type="application/ld+json">
+          {`
+          {
+            "@context": "https://schema.org",
+            "@type": "Person",
+            "name": "Anthony Daccurso",
+            "jobTitle": "Founder & Career Coach",
+            "image": "https://bvevrurqtidadhfsuoee.supabase.co/storage/v1/object/public/media/anthony-daccurso-fcp.webp",
+            "url": "https://daccursocareerstudio.com/about",
+            "description": "Digital marketer and web developer helping students and professionals build impactful careers through resume writing and coaching.",
+            "worksFor": {
+              "@type": "Organization",
+              "name": "Daccurso Career Studio",
+              "url": "https://daccursocareerstudio.com"
+            },
+            "sameAs": [
+              "https://linkedin.com/in/anthony-daccurso",
+              "https://github.com/anthonydaccurso"
+            ]
+          }
+          `}
+        </script>
+      </Helmet>
+
       <ParticleBackground isDashboard={false} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-12 animate-slide-up">
