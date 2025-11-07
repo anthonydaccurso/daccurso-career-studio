@@ -45,7 +45,7 @@ export default defineConfig({
         lang: 'en',
         icons: [
           {
-            src: 'https://bvevrurqtidadhfsuoee.supabase.co/storage/v1/object/public/media/dcs-web-app-manifest-192x192.png',
+            src: 'https://nkrnbtythzdnogvtdizv.supabase.co/storage/v1/object/public/media/dcs-web-app-manifest-192x192.png',
             sizes: '192x192',
             type: 'image/png',
           },
