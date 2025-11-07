@@ -4,42 +4,6 @@ import { supabase } from '../lib/supabase';
 import ParticleBackground from '../components/ParticleBackground';
 import { Helmet } from "react-helmet-async";
 
-<Helmet>
-  <title>Resume Services | Daccurso Career Studio</title>
-  <meta name="description" content="Get expert resume rewrites or instant AI-powered feedback. ATS-optimized, professionally formatted resumes tailored for your industry." />
-  <link rel="canonical" href="https://daccursocareerstudio.com/resume-services" />
-
-  <meta property="og:type" content="service" />
-  <meta property="og:title" content="Resume Writing | Daccurso Career Studio" />
-  <meta property="og:description" content="Professional resume services with AI or manual expert review. Fast turnaround and tailored career feedback." />
-  <meta property="og:image" content="https://bvevrurqtidadhfsuoee.supabase.co/storage/v1/object/public/media/dcs-apple-touch-icon.png" />
-
-  <script type="application/ld+json">
-    {`
-    {
-      "@context": "https://schema.org",
-      "@type": "Service",
-      "serviceType": "Resume Writing",
-      "provider": {
-        "@type": "Organization",
-        "name": "Daccurso Career Studio"
-      },
-      "areaServed": {
-        "@type": "Country",
-        "name": "United States"
-      },
-      "description": "Professional resume rewriting and optimization service for students and professionals.",
-      "offers": {
-        "@type": "Offer",
-        "priceCurrency": "USD",
-        "price": "89.99",
-        "availability": "https://schema.org/InStock"
-      }
-    }
-    `}
-  </script>
-</Helmet>
-
 export default function ResumeServices() {
   const [selectedService, setSelectedService] = useState<'manual' | 'ai' | null>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -173,6 +137,42 @@ export default function ResumeServices() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 relative">
+      <Helmet>
+        <title>Resume Services | Daccurso Career Studio</title>
+        <meta name="description" content="Get expert resume rewrites or instant AI-powered feedback. ATS-optimized, professionally formatted resumes tailored for your industry." />
+        <link rel="canonical" href="https://daccursocareerstudio.com/resume-services" />
+
+        <meta property="og:type" content="service" />
+        <meta property="og:title" content="Resume Writing & AI Feedback | Daccurso Career Studio" />
+        <meta property="og:description" content="Professional resume services with AI or manual expert review. Fast turnaround and tailored career feedback." />
+        <meta property="og:image" content="https://bvevrurqtidadhfsuoee.supabase.co/storage/v1/object/public/media/dcs-apple-touch-icon.png" />
+
+        <script type="application/ld+json">
+          {`
+          {
+            "@context": "https://schema.org",
+            "@type": "Service",
+            "serviceType": "Resume Writing",
+            "provider": {
+              "@type": "Organization",
+              "name": "Daccurso Career Studio"
+            },
+            "areaServed": {
+              "@type": "Country",
+              "name": "United States"
+            },
+            "description": "Professional resume rewriting and optimization service for students and professionals.",
+            "offers": {
+              "@type": "Offer",
+              "priceCurrency": "USD",
+              "price": "89.99",
+              "availability": "https://schema.org/InStock"
+            }
+          }
+          `}
+        </script>
+      </Helmet>
+
       <ParticleBackground isDashboard={false} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-12 animate-slide-up">
@@ -319,110 +319,110 @@ export default function ResumeServices() {
                   {selectedService === 'manual' ? 'Upload Your Resume' : 'Get AI Feedback'}
                 </h2>
                 <form onSubmit={handleSubmit}>
-              <div className="mb-6">
-                <label className="block text-gray-700 font-medium mb-2">
-                  Resume File
-                  {selectedService === 'manual' ? ' (DOCX only)' : ' (DOCX or PDF)'}
-                </label>
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-[#1c336f] transition-colors">
-                  <input
-                    type="file"
-                    accept={selectedService === 'manual' ? '.docx' : '.docx,.pdf'}
-                    onChange={handleFileChange}
-                    className="hidden"
-                    id="file-upload"
-                  />
-                  <label
-                    htmlFor="file-upload"
-                    className="cursor-pointer flex flex-col items-center"
-                  >
-                    <Upload className="text-gray-400 mb-2" size={48} />
-                    <span className="text-gray-600 mb-1">
-                      {file ? file.name : 'Click to upload or drag and drop'}
-                    </span>
-                    <span className="text-sm text-gray-500">
-                      {selectedService === 'manual' ? 'DOCX files only' : 'DOCX or PDF files'}
-                    </span>
-                  </label>
-                </div>
-              </div>
-
-              {selectedService === 'manual' && (
-                <>
                   <div className="mb-6">
                     <label className="block text-gray-700 font-medium mb-2">
-                      Full Name <span className="text-red-500">*</span>
+                      Resume File
+                      {selectedService === 'manual' ? ' (DOCX only)' : ' (DOCX or PDF)'}
                     </label>
-                    <input
-                      type="text"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      required
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1c336f]"
-                      placeholder="John Doe"
-                    />
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-[#1c336f] transition-colors">
+                      <input
+                        type="file"
+                        accept={selectedService === 'manual' ? '.docx' : '.docx,.pdf'}
+                        onChange={handleFileChange}
+                        className="hidden"
+                        id="file-upload"
+                      />
+                      <label
+                        htmlFor="file-upload"
+                        className="cursor-pointer flex flex-col items-center"
+                      >
+                        <Upload className="text-gray-400 mb-2" size={48} />
+                        <span className="text-gray-600 mb-1">
+                          {file ? file.name : 'Click to upload or drag and drop'}
+                        </span>
+                        <span className="text-sm text-gray-500">
+                          {selectedService === 'manual' ? 'DOCX files only' : 'DOCX or PDF files'}
+                        </span>
+                      </label>
+                    </div>
                   </div>
+
+                  {selectedService === 'manual' && (
+                    <>
+                      <div className="mb-6">
+                        <label className="block text-gray-700 font-medium mb-2">
+                          Full Name <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                          required
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1c336f]"
+                          placeholder="John Doe"
+                        />
+                      </div>
+                      <div className="mb-6">
+                        <label className="block text-gray-700 font-medium mb-2">
+                          Email Address <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          required
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1c336f]"
+                          placeholder="your.email@example.com"
+                        />
+                      </div>
+                      <div className="mb-6">
+                        <label className="block text-gray-700 font-medium mb-2">
+                          Phone Number (Optional)
+                        </label>
+                        <input
+                          type="tel"
+                          value={phone}
+                          onChange={(e) => setPhone(e.target.value)}
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1c336f]"
+                          placeholder="(123) 456-7890"
+                        />
+                      </div>
+                    </>
+                  )}
+
                   <div className="mb-6">
                     <label className="block text-gray-700 font-medium mb-2">
-                      Email Address <span className="text-red-500">*</span>
+                      Additional Comments (Optional)
                     </label>
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
+                    <textarea
+                      value={comments}
+                      onChange={(e) => setComments(e.target.value)}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1c336f]"
-                      placeholder="your.email@example.com"
-                    />
+                      rows={4}
+                      placeholder="Any specific areas you'd like us to focus on?"
+                    ></textarea>
                   </div>
-                  <div className="mb-6">
-                    <label className="block text-gray-700 font-medium mb-2">
-                      Phone Number (Optional)
-                    </label>
-                    <input
-                      type="tel"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1c336f]"
-                      placeholder="(123) 456-7890"
-                    />
-                  </div>
-                </>
-              )}
 
-              <div className="mb-6">
-                <label className="block text-gray-700 font-medium mb-2">
-                  Additional Comments (Optional)
-                </label>
-                <textarea
-                  value={comments}
-                  onChange={(e) => setComments(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1c336f]"
-                  rows={4}
-                  placeholder="Any specific areas you'd like us to focus on?"
-                ></textarea>
-              </div>
+                  {uploadStatus === 'success' && !aiFeedback && (
+                    <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg flex items-start">
+                      <CheckCircle className="text-blue-600 mr-3 flex-shrink-0 mt-0.5" size={20} />
+                      <div>
+                        <p className="text-blue-800 font-medium">
+                          Resume uploaded successfully!
+                        </p>
+                        <p className="text-blue-700 text-sm mt-1">
+                          We'll review your resume and get back to you within 1-2 business days.
+                        </p>
+                      </div>
+                    </div>
+                  )}
 
-              {uploadStatus === 'success' && !aiFeedback && (
-                <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg flex items-start">
-                  <CheckCircle className="text-blue-600 mr-3 flex-shrink-0 mt-0.5" size={20} />
-                  <div>
-                    <p className="text-blue-800 font-medium">
-                      Resume uploaded successfully!
-                    </p>
-                    <p className="text-blue-700 text-sm mt-1">
-                      We'll review your resume and get back to you within 1-2 business days.
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              {uploadStatus === 'error' && (
-                <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start">
-                  <AlertCircle className="text-red-600 mr-3 flex-shrink-0 mt-0.5" size={20} />
-                  <div>
-                    <p className="text-red-800 font-medium">Upload failed</p>
-                    <p className="text-red-700 text-sm mt-1">
+                  {uploadStatus === 'error' && (
+                    <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start">
+                      <AlertCircle className="text-red-600 mr-3 flex-shrink-0 mt-0.5" size={20} />
+                      <div>
+                        <p className="text-red-800 font-medium">Upload failed</p>
+                        <p className="text-red-700 text-sm-700 text-sm mt-1">
                       {errorMessage || 'Please try again or contact support if the problem persists.'}
                     </p>
                   </div>
