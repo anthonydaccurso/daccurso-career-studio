@@ -44,59 +44,18 @@ export default function ResumeServices() {
       const fileName = `${timestamp}-${file.name}`;
       const filePath = `resumes/${fileName}`;
 
-      // 1️⃣ Upload file to Supabase Storage bucket
-      const { error: uploadError } = await supabase.storage
-        .from('resumes')
-        .upload(filePath, file, { upsert: true });
-
-      if (uploadError) throw uploadError;
-
-      // 2️⃣ Get public URL
-      const { data: { publicUrl } } = supabase.storage
-        .from('resumes')
-        .getPublicUrl(filePath);
-
-      let feedback = null;
-
-      // 3️⃣ Handle AI service
-      if (selectedService === 'ai') {
-        const formData = new FormData();
-        formData.append('file', file);
-
-        const response = await fetch(
-          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/parse-and-analyze-resume`,
-          {
-            method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-            },
-            body: formData,
-          }
-        );
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || 'Failed to analyze resume');
-        }
-
-        const data = await response.json();
-        feedback = data.feedback;
-        setAiFeedback(feedback);
-
-        // Save AI analysis record (optional)
-        await supabase.from('ai_resume_feedback').insert([
-          {
-            file_name: file.name,
-            file_url: publicUrl,
-            file_size: file.size,
-            ai_feedback: feedback || 'N/A',
-            created_at: new Date().toISOString(),
-          },
-        ]);
-      }
-
-      // 4️⃣ Handle manual service
+      // Handle Manual Service
       if (selectedService === 'manual') {
+        const { error: uploadError } = await supabase.storage
+          .from('resumes')
+          .upload(filePath, file, { upsert: true });
+
+        if (uploadError) throw uploadError;
+
+        const { data: { publicUrl } } = supabase.storage
+          .from('resumes')
+          .getPublicUrl(filePath);
+
         const { error: insertError } = await supabase.from('resume_submissions').insert([
           {
             name,
@@ -112,16 +71,43 @@ export default function ResumeServices() {
         ]);
 
         if (insertError) throw insertError;
-      }
 
-      // 5️⃣ Success handling
-      setUploadStatus('success');
-      if (selectedService === 'manual') {
+        setUploadStatus('success');
         setFile(null);
         setName('');
         setEmail('');
         setPhone('');
         setComments('');
+      }
+
+      // Handle AI Service
+      if (selectedService === 'ai') {
+        const base64File = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = () => resolve(reader.result as string);
+          reader.onerror = reject;
+        });
+
+        const response = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/analyze-resume`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              resumeText: '',
+              file_name: file.name,
+              file_data: base64File,
+              file_size: file.size,
+            }),
+          }
+        );
+
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'AI analysis failed.');
+
+        setAiFeedback(data.feedback || 'No feedback generated');
+        setUploadStatus('success');
       }
     } catch (error) {
       console.error('Error submitting resume:', error);
@@ -138,36 +124,10 @@ export default function ResumeServices() {
         <title>Resume Services | Daccurso Career Studio</title>
         <meta name="description" content="Get expert resume rewrites or instant AI-powered feedback. ATS-optimized, professionally formatted resumes tailored for your industry." />
         <link rel="canonical" href="https://daccursocareerstudio.com/resume-services" />
-
         <meta property="og:type" content="service" />
         <meta property="og:title" content="Resume Services | Daccurso Career Studio" />
         <meta property="og:description" content="Professional resume services with AI or manual expert review. Fast turnaround and tailored career feedback." />
         <meta property="og:image" content="https://nkrnbtythzdnogvtdizv.supabase.co/storage/v1/object/public/media/dcs-apple-touch-icon.png" />
-
-        <script type="application/ld+json">
-          {`
-          {
-            "@context": "https://schema.org",
-            "@type": "Service",
-            "serviceType": "Resume Writing",
-            "provider": {
-              "@type": "Organization",
-              "name": "Daccurso Career Studio"
-            },
-            "areaServed": {
-              "@type": "Country",
-              "name": "United States"
-            },
-            "description": "Professional resume rewriting and optimization service for students and professionals.",
-            "offers": {
-              "@type": "Offer",
-              "priceCurrency": "USD",
-              "price": "89.99",
-              "availability": "https://schema.org/InStock"
-            }
-          }
-          `}
-        </script>
       </Helmet>
 
       <ParticleBackground isDashboard={false} />
@@ -204,9 +164,7 @@ export default function ResumeServices() {
               </div>
               {selectedService === 'manual' && <CheckCircle className="text-[#1c336f]" size={24} />}
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">
-              Professional Resume Building
-            </h3>
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">Professional Resume Building</h3>
             <p className="text-gray-600 mb-4">
               Upload your resume as a DOCX file and receive personalized, hands-on service from a young professional. I'll rebuild or refine your resume to perfection.
             </p>
@@ -250,9 +208,7 @@ export default function ResumeServices() {
               </div>
               {selectedService === 'ai' && <CheckCircle className="text-[#1c336f]" size={24} />}
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">
-              AI Resume Feedback
-            </h3>
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">AI Resume Feedback</h3>
             <p className="text-gray-600 mb-4">
               Get instant AI-powered analysis of your resume. Upload your DOCX or PDF file and receive comprehensive feedback on formatting, content, and optimization.
             </p>
