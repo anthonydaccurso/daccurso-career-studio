@@ -37,7 +37,7 @@ export default function AboutMe() {
         />
         <meta
           name="twitter:image"
-          content="https://bvevrurqtidadhfsuoee.supabase.co/storage/v1/object/public/media/anthony-daccurso-fcp.webp"
+          content="https://nkrnbtythzdnogvtdizv.supabase.co/storage/v1/object/public/media/anthony-daccurso-fcp.webp"
         />
 
         {/* Person + Organization Schema */}
