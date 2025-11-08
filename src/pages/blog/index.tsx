@@ -56,7 +56,7 @@ export default function BlogIndex() {
       <ParticleBackground isDashboard={false} />
 
       <main className="max-w-5xl mx-auto px-4 relative z-10">
-        {/* Header animates first */}
+        {/* Header animation */}
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -66,26 +66,18 @@ export default function BlogIndex() {
           Career Tips & Insights
         </motion.h1>
 
-        {/* Posts appear with a slight delay and stagger */}
-        <motion.div
-          className="grid md:grid-cols-2 gap-8"
-          initial="hidden"
-          animate="visible"
-          variants={{
-            hidden: {},
-            visible: {
-              transition: { staggerChildren: 0.1, delayChildren: 0.1 } // delay after header
-            }
-          }}
-        >
-          {posts.map((post) => (
+        {/* Staggered posts — same motion profile as Pricing, slightly delayed sequence */}
+        <div className="grid md:grid-cols-2 gap-8">
+          {posts.map((post, index) => (
             <motion.div
               key={post.slug}
-              variants={{
-                hidden: { opacity: 0, y: 30 },
-                visible: { opacity: 1, y: 0 }
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.6,
+                ease: 'easeOut',
+                delay: 0.1 + index * 0.1, // stagger timing
               }}
-              transition={{ duration: 0.5, ease: 'easeOut' }}
               className="bg-white border border-gray-300 rounded-lg p-6 hover:shadow-lg transition-all"
             >
               <div className="text-[#1c336f] text-sm font-semibold mb-2">
@@ -106,7 +98,7 @@ export default function BlogIndex() {
               </div>
             </motion.div>
           ))}
-        </motion.div>
+        </div>
       </main>
     </div>
   );
