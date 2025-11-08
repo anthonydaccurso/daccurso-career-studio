@@ -42,7 +42,7 @@ export default function Pricing() {
         {/* Grid with slide-up and delay */}
         <div className="grid md:grid-cols-3 gap-8 mb-16 animate-slide-up animate-delay-100">
           {/* AI Resume Review */}
-          <div className="bg-white border border-gray-200 rounded-lg p-8 hover:shadow-lg transition">
+          <div className="bg-white border border-gray-300 rounded-lg p-8 hover:shadow-lg transition">
             <h2 className="text-2xl font-bold text-gray-900 mb-2">
               AI Resume Review
             </h2>
@@ -73,7 +73,7 @@ export default function Pricing() {
           </div>
 
           {/* Resume Rewrite */}
-          <div className="bg-white border-2 border-[#1c336f] rounded-lg p-8 hover:shadow-lg transition relative animate-slide-up animate-delay-200">
+          <div className="bg-white border-2 border-gray-300 rounded-lg p-8 hover:shadow-lg transition relative animate-slide-up animate-delay-200">
             <div className="absolute top-0 right-0 bg-[#1c336f] text-white px-4 py-1 rounded-bl-lg rounded-tr-lg text-sm font-semibold">
               Popular
             </div>
@@ -107,7 +107,7 @@ export default function Pricing() {
           </div>
 
           {/* Professional Branding */}
-          <div className="bg-white border border-gray-200 rounded-lg p-8 hover:shadow-lg transition animate-slide-up animate-delay-300">
+          <div className="bg-white border border-gray-300 rounded-lg p-8 hover:shadow-lg transition animate-slide-up animate-delay-300">
             <h2 className="text-2xl font-bold text-gray-900 mb-2">
               Professional Branding
             </h2>
@@ -140,7 +140,7 @@ export default function Pricing() {
 
         {/* ===== Interview & Career Services ===== */}
         {/* Apply slide-up and delay here as well */}
-        <div className="bg-white border border-gray-200 rounded-lg p-8 mb-16 animate-slide-up animate-delay-500">
+        <div className="bg-white border border-gray-300 rounded-lg p-8 mb-16 animate-slide-up animate-delay-500">
           <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
             Interview & Career Services
           </h2>
@@ -189,7 +189,7 @@ export default function Pricing() {
             ].map((service) => (
               <div
                 key={service.title}
-                className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition"
+                className="border border-gray-300 rounded-lg p-6 hover:shadow-md transition"
               >
                 <h3 className="text-xl font-bold text-gray-900 mb-2">
                   {service.title}
