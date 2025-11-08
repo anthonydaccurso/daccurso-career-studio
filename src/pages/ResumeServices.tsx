@@ -242,7 +242,7 @@ export default function ResumeServices() {
               </div>
               {selectedService === 'ai' && <CheckCircle className="text-[#1c336f]" size={24} />}
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">AI Resume Feedback</h3>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">AI Resume Feedback</h2>
             <p className="text-gray-600 mb-4">
               Get instant AI-powered analysis of your resume. Upload your DOCX or PDF file and receive comprehensive feedback on formatting, content, and optimization.
             </p>
