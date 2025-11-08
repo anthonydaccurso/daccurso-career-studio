@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { posts } from '../../posts/postsData';
 import ParticleBackground from '../../components/ParticleBackground';
 import { Helmet } from 'react-helmet-async';
@@ -54,15 +55,37 @@ export default function BlogIndex() {
 
       <ParticleBackground isDashboard={false} />
 
-      {/* Add animation classes here */}
-      <main className="max-w-5xl mx-auto px-4 relative z-10 animate-slide-up">
-        <h1 className="text-4xl font-bold mb-8 text-center bg-gradient-to-r from-black via-gray-700 to-[#2d4a8f] md:from-gray-900 md:via-slate-700 md:to-[#1c336f] bg-clip-text text-transparent leading-tight">
+      <main className="max-w-5xl mx-auto px-4 relative z-10">
+        {/* Header animates first */}
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+          className="text-4xl font-bold mb-8 text-center bg-gradient-to-r from-black via-gray-700 to-[#2d4a8f] md:from-gray-900 md:via-slate-700 md:to-[#1c336f] bg-clip-text text-transparent leading-tight"
+        >
           Career Tips & Insights
-        </h1>
-        <div className="grid md:grid-cols-2 gap-8">
+        </motion.h1>
+
+        {/* Posts appear with a slight delay and stagger */}
+        <motion.div
+          className="grid md:grid-cols-2 gap-8"
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: {},
+            visible: {
+              transition: { staggerChildren: 0.1, delayChildren: 0.1 } // delay after header
+            }
+          }}
+        >
           {posts.map((post) => (
-            <div
+            <motion.div
               key={post.slug}
+              variants={{
+                hidden: { opacity: 0, y: 30 },
+                visible: { opacity: 1, y: 0 }
+              }}
+              transition={{ duration: 0.5, ease: 'easeOut' }}
               className="bg-white border border-gray-300 rounded-lg p-6 hover:shadow-lg transition-all"
             >
               <div className="text-[#1c336f] text-sm font-semibold mb-2">
@@ -81,9 +104,9 @@ export default function BlogIndex() {
                   Read More →
                 </Link>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </main>
     </div>
   );
