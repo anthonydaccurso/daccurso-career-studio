@@ -7,8 +7,8 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-#Dependencies
-node_modules
+# Dependencies
+node_modules/
 
 # Build Output
 dist
@@ -16,18 +16,31 @@ dist-ssr
 dev-dist
 *.local
 
-.vscode/*
+# Netlify / Deployment
+.netlify/
+.netlify-state.json
+
+# Editor directories and files
+.vscode/
 !.vscode/extensions.json
-.idea
+.idea/
 .DS_Store
+Thumbs.db
+
+# Miscellaneous
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
-*.sw?
-.env
-.bolt
+*.sw*
+*.bak
+*.tmp
+*.old
+*.log.*
+coverage/
+*.lcov
 
-misc
-*.timestamp-*.mjs
-PASSWORD_SECURITY.md
+# Notes
+# - Keep `.env.example` committed with placeholders.
+# - Secrets go in Netlify’s Environment Variables panel (not in repo).
+# - Bolt.new can use the same `.env` via its own Environment panel.
