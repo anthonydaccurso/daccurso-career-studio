@@ -2,6 +2,6 @@ User-agent: *
 Allow: /
 Disallow: /.env
 Disallow: /home/project/src/pages/AdminLogin.tsx
-Disallow: /.env
+Disallow: src/pages/AdminPanel.tsx
 
 Sitemap: https://daccursocareerstudio.com/sitemap.xml
