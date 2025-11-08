@@ -48,7 +48,7 @@ export default function AboutMe() {
             "@type": "Person",
             "name": "Anthony Daccurso",
             "jobTitle": "Founder & Career Coach",
-            "image": "https://bvevrurqtidadhfsuoee.supabase.co/storage/v1/object/public/media/anthony-daccurso-fcp.webp",
+            "image": "https://nkrnbtythzdnogvtdizv.supabase.co/storage/v1/object/public/media/anthony-daccurso-fcp.webp",
             "url": "https://daccursocareerstudio.com/about",
             "description": "Digital marketer and web developer helping students and professionals build impactful careers through resume writing and coaching.",
             "worksFor": {
