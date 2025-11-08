@@ -27,7 +27,7 @@ export default function AboutMe() {
         />
 
         {/* Open Graph */}
-        <link rel="canonical" href="https://daccursocareerstudio.com/about-me/" />
+        <link rel="canonical" href="https://daccursocareerstudio.com/about/" />
         <meta property="og:type" content="profile" />
         <meta property="og:url" content="https://daccursocareerstudio.com/about/" />
         <meta property="og:title" content="Anthony Daccurso | Daccurso Career Studio" />
