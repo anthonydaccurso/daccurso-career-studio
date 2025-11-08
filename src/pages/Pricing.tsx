@@ -1,206 +1,246 @@
-import { Award, Target } from 'lucide-react';
+import { useState } from 'react';
+import { Check, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import ParticleBackground from '../components/ParticleBackground';
-import { Helmet } from "react-helmet-async";
-import { getMediaPublicUrl } from '../lib/SupabaseClient';
+import BookingModal from '../components/BookingModal';
+import { Helmet } from 'react-helmet-async';
 
-const headshotUrl = getMediaPublicUrl('anthony-daccurso-fcp.webp');
+export default function Pricing() {
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [selectedService, setSelectedService] = useState('');
 
-export default function AboutMe() {
+  const handleBookSession = (serviceType: string) => {
+    setSelectedService(serviceType);
+    setIsBookingModalOpen(true);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 py-12 relative">
       <Helmet>
-        <title>Anthony Daccurso | Daccurso Career Studio</title>
+        <title>Pricing | Daccurso Career Studio</title>
         <meta
           name="description"
-          content="Learn about Anthony Daccurso — digital marketer, web developer, and founder of Daccurso Career Studio. Dedicated to helping students and professionals succeed."
+          content="Transparent pricing for resume writing, interview coaching, and professional branding services by Daccurso Career Studio."
         />
-        <link rel="canonical" href="https://daccursocareerstudio.com/about/" />
-
-        {/* Preload FCP image */}
-        <link
-          rel="preload"
-          as="image"
-          href="https://nkrnbtythzdnogvtdizv.supabase.co/storage/v1/object/public/media/anthony-daccurso-fcp.webp?quality=80&width=600&format=webp&resize=cover&cacheControl=31536000"
-          imagesizes="(max-width: 768px) 100vw, 600px"
-          fetchpriority="high"
-        />
-
-        {/* Open Graph */}
-        <link rel="canonical" href="https://daccursocareerstudio.com/about/" />
-        <meta property="og:type" content="profile" />
-        <meta property="og:url" content="https://daccursocareerstudio.com/about/" />
-        <meta property="og:title" content="Anthony Daccurso | Daccurso Career Studio" />
-        <meta
-          property="og:description"
-          content="Driven to help students and emerging professionals navigate their career paths with confidence. Learn more about Anthony Daccurso's story."
-        />
-        <meta
-          property="og:image"
-          content="https://nkrnbtythzdnogvtdizv.supabase.co/storage/v1/object/public/media/anthony-daccurso-fcp.webp"
-        />
-        <meta property="og:site_name" content="Daccurso Career Studio" />
-
-        {/* Twitter */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Anthony Daccurso | Daccurso Career Studio" />
-        <meta
-          name="twitter:description"
-          content="Anthony Daccurso is a career strategist and digital marketer helping young professionals succeed through resume and interview mastery."
-        />
-        <meta
-          name="twitter:image"
-          content="https://nkrnbtythzdnogvtdizv.supabase.co/storage/v1/object/public/media/anthony-daccurso-fcp.webp"
-        />
-
-        {/* Person + Organization Schema */}
-        <script type="application/ld+json">
-          {`
-          {
-            "@context": "https://schema.org",
-            "@type": "Person",
-            "name": "Anthony Daccurso",
-            "jobTitle": "Founder & Career Coach",
-            "image": "https://nkrnbtythzdnogvtdizv.supabase.co/storage/v1/object/public/media/anthony-daccurso-fcp.webp",
-            "url": "https://daccursocareerstudio.com/about",
-            "description": "Digital marketer and web developer helping students and professionals build impactful careers through resume writing and coaching.",
-            "worksFor": {
-              "@type": "Organization",
-              "name": "Daccurso Career Studio",
-              "url": "https://daccursocareerstudio.com"
-            },
-            "sameAs": [
-              "https://linkedin.com/in/anthony-daccurso",
-              "https://github.com/anthonydaccurso"
-            ]
-          }
-          `}
-        </script>
+        <link rel="canonical" href="https://daccursocareerstudio.com/pricing/" />
       </Helmet>
 
       <ParticleBackground isDashboard={false} />
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="text-center mb-12 animate-slide-up">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-black via-gray-700 to-[#2d4a8f] md:from-gray-900 md:via-slate-700 md:to-[#1c336f] bg-clip-text text-transparent mb-4">
-            About Me
+
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-black via-gray-700 to-[#2d4a8f] bg-clip-text text-transparent mb-4">
+            Pricing
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Driven to help students and emerging professionals navigate their career paths with confidence
+          <p className="text-lg text-gray-600">
+            Transparent, competitive pricing for professional career services
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8 mb-12">
-          <div className="md:col-span-2 bg-white border border-gray-300 rounded-lg px-8 py-6 animate-slide-up animate-delay-100">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              My Story
+        {/* ===== Resume Services ===== */}
+        <div className="grid md:grid-cols-3 gap-8 mb-16">
+          {/* AI Resume Review */}
+          <div className="bg-white border border-gray-200 rounded-lg p-8 hover:shadow-lg transition">
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              AI Resume Review
             </h2>
-            <div className="space-y-4 text-gray-700">
-              <p>
-                I've reviewed hundreds of resumes and conducted dozens of interviews. Through this journey, I've noticed a consistent pattern: so many skilled, capable people were being passed over, not because they lacked experience, but because they didn't know how to show it.
-              </p>
-              <p>
-                That's what led me to start Daccurso Career Studio. I wanted to change that. I've seen it firsthand while working in digital marketing and web development, presentation matters. The same way a strong website can boost visibility, a well-crafted resume or confident interview can change a career.
-              </p>
-              <p>
-               What sets my approach apart is that I've actually been in those hiring conversations. I know what stands out, what feels authentic, and what gets ignored. My goal is to help others, especially students and young professionals, feel confident presenting their value, not just hoping it's noticed.
-              </p>
-              <p>
-               Early in my own career, I learned that opportunities rarely come to those who wait, they come to those who know how to position themselves. In digital marketing, I studied how strategy, storytelling, and design can influence perception. I realized those same principles apply to personal branding and career growth. A resume isn't just a list of jobs, it's your professional story.
-              </p>
-              <p>
-              Through Daccurso Career Studio, I bring together that blend of creative storytelling and data-driven insight to help others move forward. I've helped peers land internships and transition into new industries, not by reinventing who they are, but by amplifying what already makes them valuable.
-              </p>
-              <p>
-                Now, my mission is simple: to level the playing field for job seekers and early-career professionals. Whether it's through a standout resume, a confident interview performance, or a strategic career plan, I'm here to help you present your best professional self authentically and effectively.
-              </p>
-            </div>
+            <div className="text-4xl font-bold text-[#1c336f] mb-2">Free</div>
+            <p className="text-gray-600 mb-6">
+              Get instant AI-powered feedback on your resume.
+            </p>
+            <ul className="space-y-2 mb-6">
+              {[
+                'Instant automated analysis',
+                'Format and content feedback',
+                'Keyword optimization tips',
+                'PDF or DOCX accepted',
+                'Unlimited revisions',
+              ].map((item) => (
+                <li key={item} className="flex items-start text-gray-700">
+                  <Check className="text-[#1c336f] mr-2 mt-0.5 flex-shrink-0" size={18} />
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <Link
+              to="/contact"
+              className="w-full block bg-gray-100 text-gray-900 py-3 rounded-lg font-semibold hover:bg-gray-200 text-center"
+            >
+              Start Free
+            </Link>
           </div>
 
-          <div className="space-y-6">
-            <div className="bg-white border border-gray-300 rounded-lg p-6 overflow-hidden animate-slide-up animate-delay-200">
-              <img
-                src="https://nkrnbtythzdnogvtdizv.supabase.co/storage/v1/object/public/media/anthony-daccurso-fcp.webp?quality=80&width=600&format=webp&resize=cover&cacheControl=31536000"
-                alt="Anthony Daccurso"
-                className="w-full h-auto rounded-lg"
-                loading="eager"
-                fetchpriority="high"
-              />
+          {/* Resume Rewrite */}
+          <div className="bg-white border-2 border-[#1c336f] rounded-lg p-8 hover:shadow-lg transition relative">
+            <div className="absolute top-0 right-0 bg-[#1c336f] text-white px-4 py-1 rounded-bl-lg rounded-tr-lg text-sm font-semibold">
+              Popular
             </div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              Resume Rewrite
+            </h2>
+            <div className="text-4xl font-bold text-[#1c336f] mb-2">$89</div>
+            <p className="text-gray-600 mb-6">
+              Professional resume writing with expert review.
+            </p>
+            <ul className="space-y-2 mb-6">
+              {[
+                'Complete resume rewrite',
+                'ATS-optimized formatting',
+                'Personalized consultation',
+                '1–2 business day delivery',
+                'One round of revisions',
+              ].map((item) => (
+                <li key={item} className="flex items-start text-gray-700">
+                  <Check className="text-[#1c336f] mr-2 mt-0.5 flex-shrink-0" size={18} />
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <Link
+              to="/contact"
+              className="w-full block bg-[#1c336f] text-white py-3 rounded-lg font-semibold hover:bg-[#2d4a8f] text-center"
+            >
+              Get Started
+            </Link>
+          </div>
 
-            <div className="bg-white border border-gray-300 rounded-lg p-6 animate-slide-up animate-delay-300">
-              <div className="bg-[#1c336f] w-12 h-12 rounded-lg flex items-center justify-center mb-3">
-                <Award className="text-white" size={24} />
-              </div>
-              <h3 className="font-bold text-gray-900 mb-2">100+ Resumes</h3>
-              <p className="text-gray-600">
-                Reviewed and provided feedback on hundreds of professional resumes
-              </p>
-            </div>
+          {/* Professional Branding */}
+          <div className="bg-white border border-gray-200 rounded-lg p-8 hover:shadow-lg transition">
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              Professional Branding
+            </h2>
+            <div className="text-4xl font-bold text-[#1c336f] mb-2">$169</div>
+            <p className="text-gray-600 mb-6">
+              Full resume, cover letter, and LinkedIn optimization.
+            </p>
+            <ul className="space-y-2 mb-6">
+              {[
+                'Everything in Resume Rewrite',
+                'Custom cover letter template',
+                'LinkedIn profile changes',
+                '3–4 business day delivery',
+                'One round of revisions',
+              ].map((item) => (
+                <li key={item} className="flex items-start text-gray-700">
+                  <Check className="text-[#1c336f] mr-2 mt-0.5 flex-shrink-0" size={18} />
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <Link
+              to="/contact"
+              className="w-full block bg-gray-100 text-gray-900 py-3 rounded-lg font-semibold hover:bg-gray-200 text-center"
+            >
+              Upgrade Now
+            </Link>
           </div>
         </div>
 
-        <div className="bg-white border border-gray-300 rounded-lg p-8 mb-8 animate-slide-up animate-delay-400">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">
-            My Approach
+        {/* ===== Interview & Career Services ===== */}
+        <div className="bg-white border border-gray-200 rounded-lg p-8 mb-16">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+            Interview & Career Services
           </h2>
           <div className="grid md:grid-cols-2 gap-8">
-            <div>
-              <h3 className="text-lg font-bold text-gray-900 mb-3 flex items-center">
-                <Target className="text-[#1c336f] mr-2" size={20} />
-                Personalized & Strategic
-              </h3>
-              <p className="text-gray-700">
-                No cookie-cutter templates here. Every resume, every piece of advice is tailored to your unique background, goals, and target industry. I take the time to understand your story and help you tell it effectively.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="text-lg font-bold text-gray-900 mb-3 flex items-center">
-                <Target className="text-[#1c336f] mr-2" size={20} />
-                Honest & Direct
-              </h3>
-              <p className="text-gray-700">
-                I provide candid feedback that will actually help you improve. If something on your resume isn't working, I'll tell you why and show you how to fix it. My goal is your success, not just making you feel good.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="text-lg font-bold text-gray-900 mb-3 flex items-center">
-                <Target className="text-[#1c336f] mr-2" size={20} />
-                Industry Insight
-              </h3>
-              <p className="text-gray-700">
-                I stay current with hiring trends, ATS systems, and what companies are looking for today. You get advice based on what's actually working right now, not outdated strategies from years ago.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="text-lg font-bold text-gray-900 mb-3 flex items-center">
-                <Target className="text-[#1c336f] mr-2" size={20} />
-                Results-Driven
-              </h3>
-              <p className="text-gray-700">
-                My success is measured by yours. Whether it's landing interviews, getting job offers, or negotiating better compensation, I focus on outcomes that matter to your career.
-              </p>
-            </div>
+            {[
+              {
+                title: 'Mock Interview Session',
+                price: 49,
+                description: '15–30 minute realistic interview with tailored feedback.',
+                features: [
+                  'Industry-specific questions',
+                  'Recorded for review',
+                  'Detailed written feedback',
+                ],
+              },
+              {
+                title: 'Interview Strategy Session',
+                price: 39,
+                description: 'Coaching to develop a winning interview approach.',
+                features: [
+                  'Company research techniques',
+                  'STAR method coaching',
+                  'Follow-up strategies',
+                ],
+              },
+              {
+                title: 'Career Strategy Consultation',
+                price: 69,
+                description: 'Personalized guidance for planning your career path.',
+                features: [
+                  'Career path planning',
+                  'Industry transition advice',
+                  '30–45 minute consultation',
+                ],
+              },
+              {
+                title: 'Salary Negotiation Coaching',
+                price: 59,
+                description: 'Learn to confidently negotiate salary & benefits.',
+                features: [
+                  'Market research insights',
+                  'Negotiation scripts and phrases',
+                  'Counter-offer strategies',
+                ],
+              },
+            ].map((service) => (
+              <div
+                key={service.title}
+                className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition"
+              >
+                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  {service.title}
+                </h3>
+                <div className="flex items-baseline mb-4">
+                  <span className="text-3xl font-bold text-[#1c336f]">
+                    ${service.price}
+                  </span>
+                  <span className="text-gray-600 ml-2">/ session</span>
+                </div>
+                <p className="text-gray-600 mb-4">{service.description}</p>
+                <ul className="space-y-2 mb-6">
+                  {service.features.map((f) => (
+                    <li key={f} className="flex items-start text-gray-700">
+                      <Check className="text-[#1c336f] mr-2 mt-0.5 flex-shrink-0" size={18} />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+                <button
+                  onClick={() => handleBookSession(service.title)}
+                  className="w-full bg-[#1c336f] text-white py-3 rounded-lg font-semibold hover:bg-[#2d4a8f] transition-colors"
+                >
+                  Book {service.title.replace('Session', '').trim()}
+                </button>
+              </div>
+            ))}
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-[#1c336f] to-[#2d4a8f] text-white rounded-lg p-8 text-center animate-slide-up animate-delay-500">
-          <h2 className="text-3xl font-bold mb-4">
-            Let's Work Together
-          </h2>
+        {/* ===== Custom Package Section ===== */}
+        <div className="bg-gradient-to-br from-[#1c336f] to-[#2d4a8f] text-white rounded-lg p-8 text-center">
+          <div className="flex items-center justify-center mb-4">
+            <Sparkles className="mr-2" size={28} />
+            <h2 className="text-3xl font-bold">Need a Custom Package?</h2>
+          </div>
           <p className="text-gray-100 mb-6 max-w-2xl mx-auto">
-            Ready to take your career to the next level? I'm here to help you every step of the way.
+            Looking for ongoing support or a combination of services? Contact me to create a
+            personalized package that fits your needs and budget.
           </p>
           <Link
             to="/contact"
             className="bg-white text-[#1c336f] px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors inline-block"
           >
-            Get Started Today
+            Contact Me
           </Link>
         </div>
-      </main>
+      </div>
+
+      <BookingModal
+        isOpen={isBookingModalOpen}
+        onClose={() => setIsBookingModalOpen(false)}
+        serviceType={selectedService}
+      />
     </div>
   );
 }
