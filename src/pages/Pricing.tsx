@@ -30,7 +30,7 @@ export default function Pricing() {
       <main className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
         {/* Header with slide-up animation */}
         <div className="text-center mb-12 animate-slide-up">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-black via-gray-700 to-[#2d4a8f] bg-clip-text text-transparent mb-4">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-black via-gray-700 to-[#2d4a8f] bg-clip-text text-transparent mb-4 leading-normal">
             Pricing
           </h1>
           <p className="text-lg text-gray-600">
