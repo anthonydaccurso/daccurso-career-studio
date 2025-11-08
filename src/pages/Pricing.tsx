@@ -41,9 +41,9 @@ export default function Pricing() {
         <div className="grid md:grid-cols-3 gap-8 mb-16">
           {/* AI Resume Review */}
           <div className="bg-white border border-gray-200 rounded-lg p-8 hover:shadow-lg transition">
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">
               AI Resume Review
-            </h3>
+            </h2>
             <div className="text-4xl font-bold text-[#1c336f] mb-2">Free</div>
             <p className="text-gray-600 mb-6">
               Get instant AI-powered feedback on your resume.
