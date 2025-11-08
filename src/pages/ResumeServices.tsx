@@ -157,7 +157,7 @@ export default function ResumeServices() {
       <Helmet>
         <title>Resume Services | Daccurso Career Studio</title>
         <meta name="description" content="Get expert resume rewrites or instant AI-powered feedback. ATS-optimized, professionally formatted resumes tailored for your industry." />
-        <link rel="canonical" href="https://daccursocareerstudio.com/resume-services" />
+        <link rel="canonical" href="https://daccursocareerstudio.com/resume-services/" />
         <meta property="og:type" content="service" />
         <meta property="og:title" content="Resume Services | Daccurso Career Studio" />
         <meta property="og:description" content="Professional resume services with AI or manual expert review. Fast turnaround and tailored career feedback." />
