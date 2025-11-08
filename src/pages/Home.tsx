@@ -43,7 +43,6 @@ export default function Home() {
             },
             "contactPoint": {
               "@type": "ContactPoint",
-              "telephone": "+1-732-299-3529",
               "contactType": "Customer Support",
               "areaServed": "US"
             },
