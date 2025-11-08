@@ -24,7 +24,7 @@ export default function AboutMe() {
         />
         <meta
           property="og:image"
-          content="https://bvevrurqtidadhfsuoee.supabase.co/storage/v1/object/public/media/anthony-daccurso-fcp.webp"
+          content="https://nkrnbtythzdnogvtdizv.supabase.co/storage/v1/object/public/media/anthony-daccurso-fcp.webp"
         />
         <meta property="og:site_name" content="Daccurso Career Studio" />
 
