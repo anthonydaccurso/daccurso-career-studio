@@ -9,7 +9,7 @@ export default function CareerAdvice() {
         <title>Career Advice | Daccurso Career Studio</title>
         <meta
           name="description"
-          content="Practical insights and tips to navigate your career — from resume updates and job searching to skill development and professional growth."
+          content="Practical insights and tips to navigate your career, from resume updates and job searching to skill development and professional growth."
         />
         <link rel="canonical" href="https://daccursocareerstudio.com/career-advice/" />
         <meta property="og:type" content="article" />
