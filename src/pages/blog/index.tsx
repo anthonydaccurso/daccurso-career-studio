@@ -66,18 +66,26 @@ export default function BlogIndex() {
           Career Tips & Insights
         </motion.h1>
 
-        {/* Posts appear 0.1s after header with stagger */}
-        <div className="grid md:grid-cols-2 gap-8">
-          {posts.map((post, index) => (
+        {/* Posts appear with a slight delay and stagger */}
+        <motion.div
+          className="grid md:grid-cols-2 gap-8"
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: {},
+            visible: {
+              transition: { staggerChildren: 0.1, delayChildren: 0.1 } // delay after header
+            }
+          }}
+        >
+          {posts.map((post) => (
             <motion.div
               key={post.slug}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: 0.5,
-                ease: 'easeOut',
-                delay: 0.1 + index * 0.1, // staggered by 0.1s per post
+              variants={{
+                hidden: { opacity: 0, y: 30 },
+                visible: { opacity: 1, y: 0 }
               }}
+              transition={{ duration: 0.5, ease: 'easeOut' }}
               className="bg-white border border-gray-300 rounded-lg p-6 hover:shadow-lg transition-all"
             >
               <div className="text-[#1c336f] text-sm font-semibold mb-2">
@@ -98,7 +106,7 @@ export default function BlogIndex() {
               </div>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </main>
     </div>
   );
