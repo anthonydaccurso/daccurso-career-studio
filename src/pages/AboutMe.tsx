@@ -17,6 +17,7 @@ export default function AboutMe() {
         />
         <link rel="canonical" href="https://daccursocareerstudio.com/about/" />
 
+        {/* Preload FCP image */}
         <link
           rel="preload"
           as="image"
