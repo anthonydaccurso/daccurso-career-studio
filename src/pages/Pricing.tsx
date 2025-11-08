@@ -27,7 +27,7 @@ export default function Pricing() {
 
       <ParticleBackground isDashboard={false} />
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+      <main className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-black via-gray-700 to-[#2d4a8f] bg-clip-text text-transparent mb-4">
             Pricing
@@ -234,7 +234,7 @@ export default function Pricing() {
             Contact Me
           </Link>
         </div>
-      </div>
+      </main>
 
       <BookingModal
         isOpen={isBookingModalOpen}
