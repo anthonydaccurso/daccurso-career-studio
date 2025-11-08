@@ -4,4 +4,4 @@
 <link rel="icon" type="image/png" sizes="96x96" href="https://nkrnbtythzdnogvtdizv.supabase.co/storage/v1/object/public/media/dcs-favicon-96x96.png">
 <link rel="icon" type="image/png" sizes="192x192" href="https://nkrnbtythzdnogvtdizv.supabase.co/storage/v1/object/public/media/dcs-web-app-manifest-192x192.png">
 <link rel="icon" type="image/png" sizes="512x512" href="https://nkrnbtythzdnogvtdizv.supabase.co/storage/v1/object/public/media/dcs-web-app-manifest-512x512.png">
-<link rel="manifest" href="/home/project/public/manifest.webmanifest">
+<link rel="manifest" href="/manifest.webmanifest">
