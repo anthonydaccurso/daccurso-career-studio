@@ -28,7 +28,8 @@ export default function Pricing() {
       <ParticleBackground isDashboard={false} />
 
       <main className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
-        <div className="text-center mb-12">
+        {/* Header with slide-up animation */}
+        <div className="text-center mb-12 animate-slide-up">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-black via-gray-700 to-[#2d4a8f] bg-clip-text text-transparent mb-4">
             Pricing
           </h1>
@@ -38,7 +39,8 @@ export default function Pricing() {
         </div>
 
         {/* ===== Resume Services ===== */}
-        <div className="grid md:grid-cols-3 gap-8 mb-16">
+        {/* Grid with slide-up and delay */}
+        <div className="grid md:grid-cols-3 gap-8 mb-16 animate-slide-up animate-delay-100">
           {/* AI Resume Review */}
           <div className="bg-white border border-gray-200 rounded-lg p-8 hover:shadow-lg transition">
             <h2 className="text-2xl font-bold text-gray-900 mb-2">
@@ -71,7 +73,7 @@ export default function Pricing() {
           </div>
 
           {/* Resume Rewrite */}
-          <div className="bg-white border-2 border-[#1c336f] rounded-lg p-8 hover:shadow-lg transition relative">
+          <div className="bg-white border-2 border-[#1c336f] rounded-lg p-8 hover:shadow-lg transition relative animate-slide-up animate-delay-200">
             <div className="absolute top-0 right-0 bg-[#1c336f] text-white px-4 py-1 rounded-bl-lg rounded-tr-lg text-sm font-semibold">
               Popular
             </div>
@@ -105,7 +107,7 @@ export default function Pricing() {
           </div>
 
           {/* Professional Branding */}
-          <div className="bg-white border border-gray-200 rounded-lg p-8 hover:shadow-lg transition">
+          <div className="bg-white border border-gray-200 rounded-lg p-8 hover:shadow-lg transition animate-slide-up animate-delay-300">
             <h2 className="text-2xl font-bold text-gray-900 mb-2">
               Professional Branding
             </h2>
@@ -137,7 +139,8 @@ export default function Pricing() {
         </div>
 
         {/* ===== Interview & Career Services ===== */}
-        <div className="bg-white border border-gray-200 rounded-lg p-8 mb-16">
+        {/* Apply slide-up and delay here as well */}
+        <div className="bg-white border border-gray-200 rounded-lg p-8 mb-16 animate-slide-up animate-delay-500">
           <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
             Interview & Career Services
           </h2>
@@ -217,8 +220,8 @@ export default function Pricing() {
           </div>
         </div>
 
-        {/* ===== Custom Package Section ===== */}
-        <div className="bg-gradient-to-br from-[#1c336f] to-[#2d4a8f] text-white rounded-lg p-8 text-center">
+        {/* ===== Custom Package Section with slide-up and delay */}
+        <div className="bg-gradient-to-br from-[#1c336f] to-[#2d4a8f] text-white rounded-lg p-8 text-center animate-slide-up animate-delay-600">
           <div className="flex items-center justify-center mb-4">
             <Sparkles className="mr-2" size={28} />
             <h2 className="text-3xl font-bold">Need a Custom Package?</h2>
