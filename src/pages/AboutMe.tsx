@@ -109,7 +109,7 @@ export default function AboutMe() {
           <div className="space-y-6">
             <div className="bg-white border border-gray-300 rounded-lg p-6 overflow-hidden animate-slide-up animate-delay-200">
               <img
-                src="https://jvibdwrogfxavxmjcctn.supabase.co/storage/v1/object/public/images/anthony-daccurso-portrait.jpg"
+                src="https://nkrnbtythzdnogvtdizv.supabase.co/storage/v1/object/public/media/anthony-daccurso-fcp.webp"
                 alt="Anthony Daccurso"
                 className="w-full h-auto rounded-lg"
               />
