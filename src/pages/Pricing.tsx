@@ -106,9 +106,9 @@ export default function Pricing() {
 
           {/* Professional Branding */}
           <div className="bg-white border border-gray-200 rounded-lg p-8 hover:shadow-lg transition">
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">
               Professional Branding
-            </h3>
+            </h2>
             <div className="text-4xl font-bold text-[#1c336f] mb-2">$169</div>
             <p className="text-gray-600 mb-6">
               Full resume, cover letter, and LinkedIn optimization.
