@@ -166,8 +166,7 @@ export default function ResumeServices() {
 
       <ParticleBackground isDashboard={false} />
 
-      <main id="main-content" role="main">
-      
+      <main id="main-content" role="main" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">      
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
         <div className="text-center mb-12 animate-slide-up">
