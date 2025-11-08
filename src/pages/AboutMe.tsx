@@ -22,12 +22,10 @@ export default function AboutMe() {
           rel="preload"
           as="image"
           href="https://nkrnbtythzdnogvtdizv.supabase.co/storage/v1/object/public/media/anthony-daccurso-fcp.webp?quality=80&width=600&format=webp&resize=cover&cacheControl=31536000"
-          imagesizes="(max-width: 768px) 100vw, 600px"
-          fetchpriority="high"
+          imageSizes="(max-width: 768px) 100vw, 600px"
         />
 
         {/* Open Graph */}
-        <link rel="canonical" href="https://daccursocareerstudio.com/about/" />
         <meta property="og:type" content="profile" />
         <meta property="og:url" content="https://daccursocareerstudio.com/about/" />
         <meta property="og:title" content="Anthony Daccurso | Daccurso Career Studio" />
@@ -79,7 +77,7 @@ export default function AboutMe() {
       </Helmet>
 
       <ParticleBackground isDashboard={false} />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-12 animate-slide-up">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-black via-gray-700 to-[#2d4a8f] md:from-gray-900 md:via-slate-700 md:to-[#1c336f] bg-clip-text text-transparent mb-4">
             About Me
@@ -96,22 +94,22 @@ export default function AboutMe() {
             </h2>
             <div className="space-y-4 text-gray-700">
               <p>
-                I've reviewed hundreds of resumes and conducted dozens of interviews. Through this journey, I've noticed a consistent pattern: so many skilled, capable people were being passed over, not because they lacked experience, but because they didn’t know how to show it.
+                I've reviewed hundreds of resumes and conducted dozens of interviews. Through this journey, I've noticed a consistent pattern: so many skilled, capable people were being passed over, not because they lacked experience, but because they didn't know how to show it.
               </p>
               <p>
-                That’s what led me to start Daccurso Career Studio. I wanted to change that. I’ve seen it firsthand while working in digital marketing and web development, presentation matters. The same way a strong website can boost visibility, a well-crafted resume or confident interview can change a career.
+                That's what led me to start Daccurso Career Studio. I wanted to change that. I've seen it firsthand while working in digital marketing and web development, presentation matters. The same way a strong website can boost visibility, a well-crafted resume or confident interview can change a career.
               </p>
               <p>
-               What sets my approach apart is that I’ve actually been in those hiring conversations. I know what stands out, what feels authentic, and what gets ignored. My goal is to help others, especially students and young professionals, feel confident presenting their value, not just hoping it’s noticed.
+               What sets my approach apart is that I've actually been in those hiring conversations. I know what stands out, what feels authentic, and what gets ignored. My goal is to help others, especially students and young professionals, feel confident presenting their value, not just hoping it's noticed.
               </p>
               <p>
-               Early in my own career, I learned that opportunities rarely come to those who wait, they come to those who know how to position themselves. In digital marketing, I studied how strategy, storytelling, and design can influence perception. I realized those same principles apply to personal branding and career growth. A resume isn’t just a list of jobs, it’s your professional story.
+               Early in my own career, I learned that opportunities rarely come to those who wait, they come to those who know how to position themselves. In digital marketing, I studied how strategy, storytelling, and design can influence perception. I realized those same principles apply to personal branding and career growth. A resume isn't just a list of jobs, it's your professional story.
               </p>
               <p>
-              Through Daccurso Career Studio, I bring together that blend of creative storytelling and data-driven insight to help others move forward. I’ve helped peers land internships and transition into new industries, not by reinventing who they are, but by amplifying what already makes them valuable.
+              Through Daccurso Career Studio, I bring together that blend of creative storytelling and data-driven insight to help others move forward. I've helped peers land internships and transition into new industries, not by reinventing who they are, but by amplifying what already makes them valuable.
               </p>
               <p>
-                Now, my mission is simple: to level the playing field for job seekers and early-career professionals. Whether it’s through a standout resume, a confident interview performance, or a strategic career plan, I’m here to help you present your best professional self authentically and effectively.
+                Now, my mission is simple: to level the playing field for job seekers and early-career professionals. Whether it's through a standout resume, a confident interview performance, or a strategic career plan, I'm here to help you present your best professional self authentically and effectively.
               </p>
             </div>
           </div>
@@ -123,7 +121,7 @@ export default function AboutMe() {
                 alt="Anthony Daccurso"
                 className="w-full h-auto rounded-lg"
                 loading="eager"
-                fetchpriority="high"
+                fetchPriority="high"
               />
             </div>
 
@@ -200,7 +198,7 @@ export default function AboutMe() {
             Get Started Today
           </Link>
         </div>
-      </div>
+      </main>
     </div>
   );
 }
