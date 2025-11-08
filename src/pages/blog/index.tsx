@@ -65,24 +65,32 @@ export default function BlogIndex() {
           </p>
         </div>
 
-        {/* Posts grid — stagger by row (2 cards per row) */}
+        {/* Posts grid — staggered by row w/ slight fade and timing offset */}
         <div className="grid md:grid-cols-2 gap-8">
           {posts.map((post, index) => {
-            // Row-based delay logic: 2 cards per row
+            // Determine row (2 per row)
             const row = Math.floor(index / 2);
+            // Fade + delay class per row
             const delayClass =
               row === 0
-                ? ''
+                ? 'animate-slide-up animate-delay-100'
                 : row === 1
-                ? 'animate-delay-200'
+                ? 'animate-slide-up animate-delay-300'
                 : row === 2
-                ? 'animate-delay-400'
-                : 'animate-delay-600';
+                ? 'animate-slide-up animate-delay-500'
+                : 'animate-slide-up animate-delay-700';
 
             return (
               <div
                 key={post.slug}
-                className={`bg-white border border-gray-300 rounded-lg p-6 hover:shadow-lg transition animate-slide-up ${delayClass}`}
+                className={`bg-white border border-gray-300 rounded-lg p-6 hover:shadow-lg transition ${delayClass}`}
+                style={{
+                  opacity: 0,
+                  animationFillMode: 'forwards',
+                  animationDuration: '0.5s',
+                  animationTimingFunction: 'ease-out',
+                  animationName: 'fadeInSlideUp',
+                }}
               >
                 <div className="text-[#1c336f] text-sm font-semibold mb-2">
                   {post.category}
@@ -105,6 +113,20 @@ export default function BlogIndex() {
           })}
         </div>
       </main>
+
+      {/* Inline animation for subtle fade + slide */}
+      <style>{`
+        @keyframes fadeInSlideUp {
+          0% {
+            opacity: 0;
+            transform: translateY(15px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
     </div>
   );
 }
