@@ -137,7 +137,7 @@ export default function ContactMe() {
             <div className="bg-[#1c336f] w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-4">
               <Mail className="text-white" size={24} />
             </div>
-            <h3 className="font-bold text-gray-900 mb-2">Email</h3>
+            <h2 className="font-bold text-gray-900 mb-2">Email</h2>
             <p className="text-gray-600">221adaccurso1@gmail.com</p>
           </div>
 
@@ -145,7 +145,7 @@ export default function ContactMe() {
             <div className="bg-[#1c336f] w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-4">
               <Clock className="text-white" size={24} />
             </div>
-            <h3 className="font-bold text-gray-900 mb-2">Response Time</h3>
+            <h2 className="font-bold text-gray-900 mb-2">Response Time</h2>
             <p className="text-gray-600">Within 24 Hours</p>
           </div>
 
@@ -158,7 +158,7 @@ export default function ContactMe() {
             <div className="bg-[#1c336f] w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-4">
               <ExternalLink className="text-white" size={24} />
             </div>
-            <h3 className="font-bold text-gray-900 mb-2">My Portfolio</h3>
+            <h2 className="font-bold text-gray-900 mb-2">My Portfolio</h2>
             <p className="text-gray-600">Visit anthonydaccurso.com</p>
           </a>
         </div>
