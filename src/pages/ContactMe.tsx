@@ -122,7 +122,7 @@ export default function ContactMe() {
       </Helmet>
 
       <ParticleBackground isDashboard={false} />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-12 animate-slide-up">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-black via-gray-700 to-[#2d4a8f] md:from-gray-900 md:via-slate-700 md:to-[#1c336f] bg-clip-text text-transparent mb-4">
             Contact Me
@@ -246,10 +246,11 @@ export default function ContactMe() {
                   </div>
 
                   <div>
-                    <label className="block text-gray-700 font-medium mb-2">
+                    <label htmlFor="service" className="block text-gray-700 font-medium mb-2">
                       Service of Interest
                     </label>
                     <select
+                      id="service"
                       name="service"
                       value={formData.service}
                       onChange={handleChange}
@@ -337,7 +338,7 @@ export default function ContactMe() {
             </ul>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }
