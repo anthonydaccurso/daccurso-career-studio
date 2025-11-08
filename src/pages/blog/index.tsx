@@ -55,7 +55,7 @@ export default function BlogIndex() {
       <ParticleBackground isDashboard={false} />
 
       <main className="max-w-5xl mx-auto px-4 relative z-10">
-        {/* Header — same as Pricing */}
+        {/* Header — matches Pricing */}
         <div className="text-center mb-12 animate-slide-up">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-black via-gray-700 to-[#2d4a8f] bg-clip-text text-transparent mb-4 leading-tight">
             Career Tips & Insights
@@ -65,37 +65,44 @@ export default function BlogIndex() {
           </p>
         </div>
 
-        {/* Posts grid — identical animation pacing as Pricing */}
+        {/* Posts grid — stagger by row (2 cards per row) */}
         <div className="grid md:grid-cols-2 gap-8">
-          {posts.map((post, index) => (
-            <div
-              key={post.slug}
-              className={`bg-white border border-gray-300 rounded-lg p-6 hover:shadow-lg transition animate-slide-up ${
-                index === 0 ? '' :
-                index === 1 ? 'animate-delay-100' :
-                index === 2 ? 'animate-delay-200' :
-                index === 3 ? 'animate-delay-300' :
-                index === 4 ? 'animate-delay-400' : 'animate-delay-500'
-              }`}
-            >
-              <div className="text-[#1c336f] text-sm font-semibold mb-2">
-                {post.category}
+          {posts.map((post, index) => {
+            // Row-based delay logic: 2 cards per row
+            const row = Math.floor(index / 2);
+            const delayClass =
+              row === 0
+                ? ''
+                : row === 1
+                ? 'animate-delay-200'
+                : row === 2
+                ? 'animate-delay-400'
+                : 'animate-delay-600';
+
+            return (
+              <div
+                key={post.slug}
+                className={`bg-white border border-gray-300 rounded-lg p-6 hover:shadow-lg transition animate-slide-up ${delayClass}`}
+              >
+                <div className="text-[#1c336f] text-sm font-semibold mb-2">
+                  {post.category}
+                </div>
+                <h2 className="text-2xl font-semibold mb-3 text-gray-900">
+                  {post.title}
+                </h2>
+                <p className="text-gray-600 mb-4">{post.excerpt}</p>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-500">{post.readTime}</span>
+                  <Link
+                    to={`/blog/${post.slug}`}
+                    className="text-[#1c336f] font-semibold hover:underline"
+                  >
+                    Read More →
+                  </Link>
+                </div>
               </div>
-              <h2 className="text-2xl font-semibold mb-3 text-gray-900">
-                {post.title}
-              </h2>
-              <p className="text-gray-600 mb-4">{post.excerpt}</p>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-500">{post.readTime}</span>
-                <Link
-                  to={`/blog/${post.slug}`}
-                  className="text-[#1c336f] font-semibold hover:underline"
-                >
-                  Read More →
-                </Link>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </main>
     </div>
