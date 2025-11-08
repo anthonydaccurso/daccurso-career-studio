@@ -2,98 +2,106 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "https://daccursocareerstudio.com", // or "*" for local testing
+  "Access-Control-Allow-Origin": "https://daccursocareerstudio.com",
   "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-  "Access-Control-Allow-Headers":
-    "Content-Type, Authorization, X-Client-Info, apikey",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Client-Info, apikey"
 };
 
-Deno.serve(async (req: Request) => {
+Deno.serve(async (req)=>{
   if (req.method === "OPTIONS") {
-    return new Response("ok", { status: 200, headers: corsHeaders });
+    return new Response("ok", {
+      status: 200,
+      headers: corsHeaders
+    });
   }
-
   try {
+    // Log EST timestamp
+    const estTime = new Date().toLocaleString('en-US', { timeZone: 'America/New_York' });
+    console.log('[EST]', estTime, '- Download request received');
+
     const url = new URL(req.url);
     const submissionId = url.searchParams.get("id");
     const tableType = url.searchParams.get("type") || "manual";
-
     if (!submissionId) {
-      return new Response(
-        JSON.stringify({ error: "Missing submission ID." }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
-      );
+      return new Response(JSON.stringify({
+        error: "Missing submission ID."
+      }), {
+        status: 400,
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "application/json"
+        }
+      });
     }
-
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
     if (!supabaseUrl || !supabaseServiceKey) {
       throw new Error("Missing Supabase environment variables");
     }
-
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
-
-    const tableName =
-      tableType === "ai" ? "ai_resume_feedback" : "resume_submissions";
-
-    const { data, error } = await supabase
-      .from(tableName)
-      .select("file_name, file_data")
-      .eq("id", submissionId)
-      .maybeSingle();
-
+    const tableName = tableType === "ai" ? "ai_resume_feedback" : "resume_submissions";
+    const { data, error } = await supabase.from(tableName).select("file_name, file_data").eq("id", submissionId).maybeSingle();
     if (error) {
       console.error("Supabase error:", error);
-      return new Response(
-        JSON.stringify({ error: "Error fetching submission." }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } },
-      );
+      return new Response(JSON.stringify({
+        error: "Error fetching submission."
+      }), {
+        status: 500,
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "application/json"
+        }
+      });
     }
-
     if (!data) {
-      return new Response(
-        JSON.stringify({ error: "Submission not found." }),
-        { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } },
-      );
+      return new Response(JSON.stringify({
+        error: "Submission not found."
+      }), {
+        status: 404,
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "application/json"
+        }
+      });
     }
-
     if (!data.file_data) {
-      return new Response(
-        JSON.stringify({ error: "No file data available." }),
-        { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } },
-      );
+      return new Response(JSON.stringify({
+        error: "No file data available."
+      }), {
+        status: 404,
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "application/json"
+        }
+      });
     }
-
     const binaryString = atob(data.file_data);
     const bytes = new Uint8Array(binaryString.length);
-    for (let i = 0; i < binaryString.length; i++) {
+    for(let i = 0; i < binaryString.length; i++){
       bytes[i] = binaryString.charCodeAt(i);
     }
-
-    const contentType = data.file_name.endsWith(".pdf")
-      ? "application/pdf"
-      : "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+    const contentType = data.file_name.endsWith(".pdf") ? "application/pdf" : "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+    
+    console.log('[EST]', new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }), '- File downloaded:', data.file_name);
 
     return new Response(bytes, {
       status: 200,
       headers: {
         ...corsHeaders,
         "Content-Type": contentType,
-        "Content-Disposition": `attachment; filename="${data.file_name}"`,
-      },
+        "Content-Disposition": `attachment; filename="${data.file_name}"`
+      }
     });
   } catch (error) {
     console.error("Error in download-resume:", error);
-    return new Response(
-      JSON.stringify({
-        error:
-          "An error occurred: " +
-          (error instanceof Error ? error.message : "Unknown error"),
-      }),
-      {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      },
-    );
+    return new Response(JSON.stringify({
+      error: "An error occurred: " + (error instanceof Error ? error.message : "Unknown error")
+    }), {
+      status: 500,
+      headers: {
+        ...corsHeaders,
+        "Content-Type": "application/json"
+      }
+    });
   }
 });
