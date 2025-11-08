@@ -43,5 +43,9 @@
     "vite": "^5.4.21",
     "vite-plugin-compression": "^0.5.1",
     "vite-plugin-pwa": "^1.1.0"
+  },
+  "overrides": {
+    "vite": "^5.4.21",
+    "esbuild": "^0.25.12"
   }
 }
