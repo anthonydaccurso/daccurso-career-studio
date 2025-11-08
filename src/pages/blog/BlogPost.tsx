@@ -18,7 +18,7 @@ export default function BlogPost() {
     return (
       <div className="min-h-screen bg-gray-50 py-20 relative">
         <ParticleBackground isDashboard={false} />
-        <main className="max-w-3xl mx-auto px-4 text-center relative z-10">
+        <div className="max-w-3xl mx-auto px-4 text-center relative z-10">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">Post Not Found</h1>
           <p className="text-gray-600 mb-8">The blog post you're looking for doesn't exist.</p>
           <Link
@@ -28,7 +28,7 @@ export default function BlogPost() {
             <ArrowLeft size={20} />
             Back to Blog
           </Link>
-        </main>
+        </div>
       </div>
     );
   }
