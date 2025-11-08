@@ -146,7 +146,6 @@ export default function ResumeServices() {
       <ParticleBackground isDashboard={false} />
 
       <main id="main-content" role="main" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Header */}
         <header className="text-center mb-12 animate-slide-up">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-black via-gray-700 to-[#2d4a8f] md:from-gray-900 md:via-slate-700 md:to-[#1c336f] bg-clip-text text-transparent mb-4">
             Resume Services
@@ -156,11 +155,9 @@ export default function ResumeServices() {
           </p>
         </header>
 
-        {/* Service Options */}
         <section className="grid md:grid-cols-2 gap-8 mb-12" aria-labelledby="services-heading">
           <h2 id="services-heading" className="sr-only">Available Resume Services</h2>
 
-          {/* Manual Service */}
           <article
             className={`bg-white border-2 rounded-lg p-8 cursor-pointer transition-all animate-slide-up animate-delay-100 ${
               selectedService === 'manual' ? 'border-[#1c336f] shadow-lg' : 'border-gray-300 hover:border-gray-400'
@@ -190,7 +187,6 @@ export default function ResumeServices() {
             <div className="text-[#1c336f] font-bold text-xl">See Pricing Page</div>
           </article>
 
-          {/* AI Feedback Service */}
           <article
             className={`bg-white border-2 rounded-lg p-8 cursor-pointer transition-all animate-slide-up animate-delay-200 ${
               selectedService === 'ai' ? 'border-[#1c336f] shadow-lg' : 'border-gray-300 hover:border-gray-400'
@@ -221,7 +217,6 @@ export default function ResumeServices() {
           </article>
         </section>
 
-        {/* Upload Form Section */}
         {selectedService && (
           <section
             className="max-w-2xl mx-auto bg-white border border-gray-300 rounded-lg p-8 animate-slide-up animate-delay-300"
@@ -258,8 +253,124 @@ export default function ResumeServices() {
                   {selectedService === 'manual' ? 'Upload Your Resume' : 'Get AI Feedback'}
                 </h3>
                 <form onSubmit={handleSubmit}>
-                  {/* file input and form fields remain unchanged */}
-                  {/* ... existing form markup ... */}
+                  <div className="mb-6">
+                    <label className="block text-gray-700 font-medium mb-2">
+                      Resume File {selectedService === 'manual' ? '(DOCX only)' : '(DOCX or PDF)'}
+                    </label>
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-[#1c336f] transition-colors">
+                      <input
+                        type="file"
+                        accept={selectedService === 'manual' ? '.docx' : '.docx,.pdf'}
+                        onChange={handleFileChange}
+                        className="hidden"
+                        id="file-upload"
+                      />
+                      <label htmlFor="file-upload" className="cursor-pointer flex flex-col items-center">
+                        <Upload className="text-gray-400 mb-2" size={48} />
+                        <span className="text-gray-600 mb-1">
+                          {file ? file.name : 'Click to upload or drag and drop'}
+                        </span>
+                        <span className="text-sm text-gray-500">
+                          {selectedService === 'manual' ? 'DOCX files only' : 'DOCX or PDF files'}
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+
+                  {selectedService === 'manual' && (
+                    <>
+                      <div className="mb-6">
+                        <label className="block text-gray-700 font-medium mb-2">
+                          Full Name <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                          required
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1c336f]"
+                          placeholder="John Doe"
+                        />
+                      </div>
+                      <div className="mb-6">
+                        <label className="block text-gray-700 font-medium mb-2">
+                          Email Address <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          required
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1c336f]"
+                          placeholder="your.email@example.com"
+                        />
+                      </div>
+                      <div className="mb-6">
+                        <label className="block text-gray-700 font-medium mb-2">
+                          Phone Number (Optional)
+                        </label>
+                        <input
+                          type="tel"
+                          value={phone}
+                          onChange={(e) => setPhone(e.target.value)}
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1c336f]"
+                          placeholder="(123) 456-7890"
+                        />
+                      </div>
+                    </>
+                  )}
+
+                  <div className="mb-6">
+                    <label className="block text-gray-700 font-medium mb-2">
+                      Additional Comments (Optional)
+                    </label>
+                    <textarea
+                      value={comments}
+                      onChange={(e) => setComments(e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1c336f]"
+                      rows={4}
+                      placeholder="Any specific areas you'd like us to focus on?"
+                    ></textarea>
+                  </div>
+
+                  {uploadStatus === 'success' && !aiFeedback && (
+                    <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg flex items-start">
+                      <CheckCircle className="text-blue-600 mr-3 flex-shrink-0 mt-0.5" size={20} />
+                      <div>
+                        <p className="text-blue-800 font-medium">Resume uploaded successfully!</p>
+                        <p className="text-blue-700 text-sm mt-1">
+                          We'll review your resume and get back to you within 1-2 business days.
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  {uploadStatus === 'error' && (
+                    <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start">
+                      <AlertCircle className="text-red-600 mr-3 flex-shrink-0 mt-0.5" size={20} />
+                      <div>
+                        <p className="text-red-800 font-medium">Upload failed</p>
+                        <p className="text-red-700 text-sm mt-1">
+                          {errorMessage || 'Please try again or contact support if the problem persists.'}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  <button
+                    type="submit"
+                    disabled={!file || uploading}
+                    className="w-full bg-[#1c336f] text-white py-3 rounded-lg font-semibold hover:bg-[#2d4a8f] transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center"
+                  >
+                    {uploading ? (
+                      <>
+                        <Loader2 className="animate-spin mr-2" size={20} />
+                        {selectedService === 'ai' ? 'Analyzing...' : 'Uploading...'}
+                      </>
+                    ) : (
+                      selectedService === 'ai' ? 'Get AI Feedback' : 'Submit Resume'
+                    )}
+                  </button>
                 </form>
               </>
             )}
