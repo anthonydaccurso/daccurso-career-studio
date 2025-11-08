@@ -198,7 +198,7 @@ export default function ResumeServices() {
               </div>
               {selectedService === 'manual' && <CheckCircle className="text-[#1c336f]" size={24} />}
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Professional Resume Building</h2>
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">Professional Resume Building</h3>
             <p className="text-gray-600 mb-4">
               Upload your resume as a DOCX file and receive personalized, hands-on service from a young professional. I'll rebuild or refine your resume to perfection.
             </p>
