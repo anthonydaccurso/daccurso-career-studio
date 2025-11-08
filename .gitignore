@@ -11,10 +11,13 @@ lerna-debug.log*
 node_modules/
 
 # Build Output
-dist
-dist-ssr
-dev-dist
-*.local
+dist/
+dist-ssr/
+build/
+.cache/
+tmp/
+functions-build/
+bolt-data/
 
 # Netlify / Deployment
 .netlify/
