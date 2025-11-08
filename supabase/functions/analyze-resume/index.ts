@@ -1,18 +1,13 @@
-// ============================================
-// 1. analyze-resume.ts
-// ============================================
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
 import mammoth from "npm:mammoth@1.8.0";
 import pdfParse from "npm:pdf-parse@1.1.1";
-
 const corsHeaders = {
   "Access-Control-Allow-Origin": "https://daccursocareerstudio.com",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
   "Access-Control-Allow-Headers": "Authorization, apikey, Content-Type, X-Client-Info",
   "Access-Control-Max-Age": "86400"
 };
-
 Deno.serve(async (req)=>{
   // Handle CORS preflight
   if (req.method === "OPTIONS") {
@@ -23,9 +18,10 @@ Deno.serve(async (req)=>{
   }
   try {
     // Log EST timestamp
-    const estTime = new Date().toLocaleString('en-US', { timeZone: 'America/New_York' });
+    const estTime = new Date().toLocaleString('en-US', {
+      timeZone: 'America/New_York'
+    });
     console.log('[EST]', estTime, '- Resume analysis started');
-
     // Parse form data
     const formData = await req.formData();
     const file = formData.get("file");
@@ -155,9 +151,9 @@ ${resumeText}`
       console.error("Database insert error:", dbError);
       throw new Error(`Failed to save feedback: ${dbError.message}`);
     }
-    
-    console.log('[EST]', new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }), '- Resume analysis completed');
-
+    console.log('[EST]', new Date().toLocaleString('en-US', {
+      timeZone: 'America/New_York'
+    }), '- Resume analysis completed');
     // Return success response
     return new Response(JSON.stringify({
       success: true,
