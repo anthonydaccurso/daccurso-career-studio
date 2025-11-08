@@ -54,7 +54,8 @@ export default function BlogIndex() {
 
       <ParticleBackground isDashboard={false} />
 
-      <main className="max-w-5xl mx-auto px-4 relative z-10">
+      {/* Add animation classes here */}
+      <main className="max-w-5xl mx-auto px-4 relative z-10 animate-slide-up">
         <h1 className="text-4xl font-bold mb-8 text-center bg-gradient-to-r from-black via-gray-700 to-[#2d4a8f] md:from-gray-900 md:via-slate-700 md:to-[#1c336f] bg-clip-text text-transparent">
           Career Tips & Insights
         </h1>
