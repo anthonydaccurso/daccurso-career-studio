@@ -231,7 +231,7 @@ export default function Pricing() {
             to="/contact"
             className="bg-white text-[#1c336f] px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors inline-block"
           >
-            Contact Me
+            Contact Me 
           </Link>
         </div>
       </main>
