@@ -75,9 +75,9 @@ export default function Pricing() {
             <div className="absolute top-0 right-0 bg-[#1c336f] text-white px-4 py-1 rounded-bl-lg rounded-tr-lg text-sm font-semibold">
               Popular
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">
               Resume Rewrite
-            </h3>
+            </h2>
             <div className="text-4xl font-bold text-[#1c336f] mb-2">$89</div>
             <p className="text-gray-600 mb-6">
               Professional resume writing with expert review.
