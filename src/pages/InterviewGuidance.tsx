@@ -12,7 +12,7 @@ export default function InterviewGuidance() {
       <Helmet>
         <title>Interview Guidance | Daccurso Career Studio</title>
         <meta name="description" content="Mock interviews, strategy sessions, and salary negotiation coaching designed to help you walk into your next interview with confidence." />
-        <link rel="canonical" href="https://daccursocareerstudio.com/interview-guidance" />
+        <link rel="canonical" href="https://daccursocareerstudio.com/interview-guidance/" />
 
         <meta property="og:type" content="service" />
         <meta property="og:title" content="Interview Guidance | Daccurso Career Studio" />
