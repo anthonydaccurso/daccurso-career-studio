@@ -115,7 +115,7 @@ export default function CareerAdvice() {
             <div className="bg-[#1c336f] w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-3">
               <Compass className="text-white" size={24} />
             </div>
-            <h3 className="font-bold text-gray-900 mb-2">Career Planning</h3>
+            <h2 className="font-bold text-gray-900 mb-2">Career Planning</h2>
             <p className="text-sm text-gray-600">
               Strategic advice for long-term career growth
             </p>
@@ -125,7 +125,7 @@ export default function CareerAdvice() {
             <div className="bg-[#1c336f] w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-3">
               <Briefcase className="text-white" size={24} />
             </div>
-            <h3 className="font-bold text-gray-900 mb-2">Job Search</h3>
+            <h2 className="font-bold text-gray-900 mb-2">Job Search</h2>
             <p className="text-sm text-gray-600">
               Proven strategies to land your dream job
             </p>
@@ -135,7 +135,7 @@ export default function CareerAdvice() {
             <div className="bg-[#1c336f] w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-3">
               <LineChart className="text-white" size={24} />
             </div>
-            <h3 className="font-bold text-gray-900 mb-2">Career Growth</h3>
+            <h2 className="font-bold text-gray-900 mb-2">Career Growth</h2>
             <p className="text-sm text-gray-600">
               Advance faster with insider knowledge
             </p>
@@ -145,7 +145,7 @@ export default function CareerAdvice() {
             <div className="bg-[#1c336f] w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-3">
               <GraduationCap className="text-white" size={24} />
             </div>
-            <h3 className="font-bold text-gray-900 mb-2">Skill Development</h3>
+            <h2 className="font-bold text-gray-900 mb-2">Skill Development</h2>
             <p className="text-sm text-gray-600">
               Build valuable skills that employers value most
             </p>
