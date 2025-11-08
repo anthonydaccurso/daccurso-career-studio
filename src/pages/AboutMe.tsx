@@ -17,6 +17,15 @@ export default function AboutMe() {
         />
         <link rel="canonical" href="https://daccursocareerstudio.com/about/" />
 
+        {/* ✅ Preload FCP image */}
+        <link
+          rel="preload"
+          as="image"
+          href="https://nkrnbtythzdnogvtdizv.supabase.co/storage/v1/object/public/media/anthony-daccurso-fcp.webp?quality=80&width=600&format=webp&resize=cover&cacheControl=31536000"
+          imagesizes="(max-width: 768px) 100vw, 600px"
+          fetchpriority="high"
+        />
+
         {/* Open Graph */}
         <meta property="og:type" content="profile" />
         <meta property="og:url" content="https://daccursocareerstudio.com/about/" />
@@ -109,9 +118,11 @@ export default function AboutMe() {
           <div className="space-y-6">
             <div className="bg-white border border-gray-300 rounded-lg p-6 overflow-hidden animate-slide-up animate-delay-200">
               <img
-                src="https://nkrnbtythzdnogvtdizv.supabase.co/storage/v1/object/public/media/anthony-daccurso-fcp.webp"
+                src="https://nkrnbtythzdnogvtdizv.supabase.co/storage/v1/object/public/media/anthony-daccurso-fcp.webp?quality=80&width=600&format=webp&resize=cover&cacheControl=31536000"
                 alt="Anthony Daccurso"
                 className="w-full h-auto rounded-lg"
+                loading="eager"
+                fetchpriority="high"
               />
             </div>
 
