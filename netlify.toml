@@ -24,4 +24,4 @@
   status = 200
 
 [prerender]
-  crawl = true
+crawl = true
