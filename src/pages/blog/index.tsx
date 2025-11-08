@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { posts } from '../../posts/postsData';
 import ParticleBackground from '../../components/ParticleBackground';
 import { Helmet } from 'react-helmet-async';
@@ -56,29 +55,28 @@ export default function BlogIndex() {
       <ParticleBackground isDashboard={false} />
 
       <main className="max-w-5xl mx-auto px-4 relative z-10">
-        {/* Header animation */}
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: 'easeOut' }}
-          className="text-4xl font-bold mb-8 text-center bg-gradient-to-r from-black via-gray-700 to-[#2d4a8f] md:from-gray-900 md:via-slate-700 md:to-[#1c336f] bg-clip-text text-transparent leading-tight"
-        >
-          Career Tips & Insights
-        </motion.h1>
+        {/* Header — same as Pricing */}
+        <div className="text-center mb-12 animate-slide-up">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-black via-gray-700 to-[#2d4a8f] bg-clip-text text-transparent mb-4 leading-tight">
+            Career Tips & Insights
+          </h1>
+          <p className="text-lg text-gray-600">
+            Practical insights for building your career and professional growth
+          </p>
+        </div>
 
-        {/* Staggered posts — same motion profile as Pricing, slightly delayed sequence */}
+        {/* Posts grid — identical animation pacing as Pricing */}
         <div className="grid md:grid-cols-2 gap-8">
           {posts.map((post, index) => (
-            <motion.div
+            <div
               key={post.slug}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: 0.6,
-                ease: 'easeOut',
-                delay: 0.1 + index * 0.1, // stagger timing
-              }}
-              className="bg-white border border-gray-300 rounded-lg p-6 hover:shadow-lg transition-all"
+              className={`bg-white border border-gray-300 rounded-lg p-6 hover:shadow-lg transition animate-slide-up ${
+                index === 0 ? '' :
+                index === 1 ? 'animate-delay-100' :
+                index === 2 ? 'animate-delay-200' :
+                index === 3 ? 'animate-delay-300' :
+                index === 4 ? 'animate-delay-400' : 'animate-delay-500'
+              }`}
             >
               <div className="text-[#1c336f] text-sm font-semibold mb-2">
                 {post.category}
@@ -96,7 +94,7 @@ export default function BlogIndex() {
                   Read More →
                 </Link>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </main>
