@@ -31,7 +31,7 @@ export default function Pricing() {
         {/* Header with slide-up animation */}
         <div className="text-center mb-12 animate-slide-up">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-black via-gray-700 to-[#2d4a8f] bg-clip-text text-transparent mb-4 leading-tight">
-            Pricing
+            My Pricing
           </h1>
           <p className="text-lg text-gray-600">
             Transparent, competitive pricing for professional career services
