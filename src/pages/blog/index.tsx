@@ -13,7 +13,7 @@ export default function BlogIndex() {
   return (
     <div className="min-h-screen bg-gray-50 py-12 relative">
       <Helmet>
-        <title>Blog Posts | Daccurso Career Studio</title>
+        <title>Blog Posts | Daccurso Career Studio</title> 
         <meta
           name="description"
           content="Practical insights and tips to navigate your career — from resume updates and job searching to skill development and professional growth."
