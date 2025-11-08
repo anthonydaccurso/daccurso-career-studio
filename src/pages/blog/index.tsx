@@ -33,21 +33,23 @@ export default function BlogIndex() {
             "@context": "https://schema.org",
             "@type": "Blog",
             "name": "Career Tips & Insights",
-            "description": "Career advice and professional development insights from Daccurso Career Studio.",
+            "description":
+              "Career advice and professional development insights from Daccurso Career Studio.",
             "publisher": {
               "@type": "Organization",
               "name": "Daccurso Career Studio",
               "logo": {
                 "@type": "ImageObject",
-                "url": "https://bvevrurqtidadhfsuoee.supabase.co/storage/v1/object/public/media/dcs-apple-touch-icon.png"
-              }
+                "url":
+                  "https://bvevrurqtidadhfsuoee.supabase.co/storage/v1/object/public/media/dcs-apple-touch-icon.png",
+              },
             },
-            "blogPost": posts.map(post => ({
+            "blogPost": posts.map((post) => ({
               "@type": "BlogPosting",
               "headline": post.title,
               "datePublished": post.date,
-              "url": `https://daccursocareerstudio.com/blog/${post.slug}`
-            }))
+              "url": `https://daccursocareerstudio.com/blog/${post.slug}`,
+            })),
           })}
         </script>
       </Helmet>
@@ -55,7 +57,7 @@ export default function BlogIndex() {
       <ParticleBackground isDashboard={false} />
 
       <main className="max-w-5xl mx-auto px-4 relative z-10">
-        {/* Header — matches Pricing */}
+        {/* Header */}
         <div className="text-center mb-12 animate-slide-up">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-black via-gray-700 to-[#2d4a8f] bg-clip-text text-transparent mb-4 leading-tight">
             Career Tips & Insights
@@ -65,31 +67,26 @@ export default function BlogIndex() {
           </p>
         </div>
 
-        {/* Posts grid — staggered by row w/ slight fade and timing offset */}
+        {/* Posts grid — staggered by row + left→right */}
         <div className="grid md:grid-cols-2 gap-8">
           {posts.map((post, index) => {
-            // Determine row (2 per row)
             const row = Math.floor(index / 2);
-            // Fade + delay class per row
-            const delayClass =
-              row === 0
-                ? 'animate-slide-up animate-delay-100'
-                : row === 1
-                ? 'animate-slide-up animate-delay-300'
-                : row === 2
-                ? 'animate-slide-up animate-delay-500'
-                : 'animate-slide-up animate-delay-700';
+            const isLeft = index % 2 === 0;
+
+            // Base vertical stagger by row
+            let baseDelay =
+              row === 0 ? 0.1 : row === 1 ? 0.3 : row === 2 ? 0.5 : 0.7;
+
+            // Add horizontal stagger (right side starts 0.1s later)
+            if (!isLeft) baseDelay += 0.1;
 
             return (
               <div
                 key={post.slug}
-                className={`bg-white border border-gray-300 rounded-lg p-6 hover:shadow-lg transition ${delayClass}`}
+                className="bg-white border border-gray-300 rounded-lg p-6 hover:shadow-lg transition"
                 style={{
                   opacity: 0,
-                  animationFillMode: 'forwards',
-                  animationDuration: '0.5s',
-                  animationTimingFunction: 'ease-out',
-                  animationName: 'fadeInSlideUp',
+                  animation: `fadeInSlideUp 0.5s ${baseDelay}s ease-out forwards`,
                 }}
               >
                 <div className="text-[#1c336f] text-sm font-semibold mb-2">
@@ -114,7 +111,7 @@ export default function BlogIndex() {
         </div>
       </main>
 
-      {/* Inline animation for subtle fade + slide */}
+      {/* Fade + slide animation */}
       <style>{`
         @keyframes fadeInSlideUp {
           0% {
