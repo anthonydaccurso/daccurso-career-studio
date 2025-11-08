@@ -89,7 +89,7 @@ export default function ContactMe() {
       <Helmet>
         <title>Contact Me | Daccurso Career Studio</title>
         <meta name="description" content="Get in touch with Anthony Daccurso for personalized resume services, interview coaching, or career consultations. Responses within 24 hours." />
-        <link rel="canonical" href="https://daccursocareerstudio.com/contact-me" />
+        <link rel="canonical" href="https://daccursocareerstudio.com/contact-me/" />
 
         <meta property="og:type" content="website" />
         <meta property="og:title" content="Contact Daccurso Career Studio" />
