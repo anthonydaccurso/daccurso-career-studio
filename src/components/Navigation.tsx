@@ -14,7 +14,6 @@ export default function Navigation() {
     { label: 'Pricing', path: '/pricing' },
     { label: 'Store', path: '/store' },
     { label: 'Blog', path: '/blog' },
-    { label: 'Store', path: '/store' },
     { label: 'About Me', path: '/about' },
     { label: 'Contact Me', path: '/contact' },
   ];
