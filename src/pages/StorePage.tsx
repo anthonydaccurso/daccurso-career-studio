@@ -3,9 +3,9 @@ import { ShoppingBag } from 'lucide-react';
 
 function StorePage() {
   useEffect(() => {
-    // Redirect to your Fourthwall store after a brief moment
+    // Use replace to ensure we leave the React app entirely
     const timer = setTimeout(() => {
-      window.location.href = 'https://daccurso-career-studio-shop.fourthwall.com';
+      window.location.replace('https://daccurso-career-studio-shop.fourthwall.com');
     }, 800);
 
     return () => clearTimeout(timer);
