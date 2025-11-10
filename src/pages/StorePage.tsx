@@ -8,7 +8,7 @@ function StorePage() {
     // Redirect to your Fourthwall store after a brief moment
     const timer = setTimeout(() => {
       // Replace with your actual Fourthwall store URL from your dashboard
-      const storeUrl = 'https://daccursocareerstudio.fourthwall.com'; // Update this!
+      const storeUrl = 'daccurso-career-studio-shop.fourthwall.com'; // Update this!
       
       // Check if URL is reachable (this is a simple check)
       fetch(storeUrl, { mode: 'no-cors' })
