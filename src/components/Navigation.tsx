@@ -12,7 +12,9 @@ export default function Navigation() {
     { label: 'Interview Guidance', path: '/interview-guidance' },
     { label: 'Career Advice', path: '/career-advice' },
     { label: 'Pricing', path: '/pricing' },
+    { label: 'Store', path: '/store' },
     { label: 'Blog', path: '/blog' },
+    { label: 'Store', path: '/store' },
     { label: 'About Me', path: '/about' },
     { label: 'Contact Me', path: '/contact' },
   ];
