@@ -48,9 +48,12 @@ function AppContent() {
         <Route path="/about" element={<><Navigation /><AboutMe /></>} />
         <Route path="/pricing" element={<><Navigation /><Pricing /></>} />
         <Route path="/contact" element={<><Navigation /><ContactMe /></>} />
-        <Route path="/store" element={<StorePage />} />
         <Route path="/blog" element={<><Navigation /><BlogIndex /></>} />
         <Route path="/blog/:slug" element={<><Navigation /><BlogPost /></>} />
+        
+        {/* Store route - seamless redirect to Fourthwall */}
+        <Route path="/store" element={<StorePage />} />
+        
         <Route path="/admin-panel" element={<AdminRoute />} />
         <Route path="*" element={<><Navigation /><Home /></>} />
       </Routes>
