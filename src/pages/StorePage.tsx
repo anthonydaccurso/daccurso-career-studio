@@ -1,49 +1,15 @@
-import { useEffect, useState } from 'react';
-import { ShoppingBag, AlertCircle } from 'lucide-react';
+import { useEffect } from 'react';
+import { ShoppingBag } from 'lucide-react';
 
 function StorePage() {
-  const [error, setError] = useState(false);
-
   useEffect(() => {
     // Redirect to your Fourthwall store after a brief moment
     const timer = setTimeout(() => {
-      // Replace with your actual Fourthwall store URL from your dashboard
-      const storeUrl = 'daccurso-career-studio-shop.fourthwall.com'; // Update this!
-      
-      // Check if URL is reachable (this is a simple check)
-      fetch(storeUrl, { mode: 'no-cors' })
-        .then(() => {
-          window.location.href = storeUrl;
-        })
-        .catch(() => {
-          setError(true);
-        });
+      window.location.href = 'https://daccurso-career-studio-shop.fourthwall.com';
     }, 800);
 
     return () => clearTimeout(timer);
   }, []);
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center p-4">
-        <div className="text-center max-w-md">
-          <AlertCircle className="w-16 h-16 text-orange-500 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-slate-800 mb-2">
-            Store Coming Soon!
-          </h2>
-          <p className="text-slate-600 mb-6">
-            We're currently setting up our store. Please check back soon or contact us for immediate assistance.
-          </p>
-          <a
-            href="/contact"
-            className="inline-block px-6 py-3 bg-[#1c336f] text-white rounded-lg font-semibold hover:bg-[#152847] transition-colors"
-          >
-            Contact Us
-          </a>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center p-4">
