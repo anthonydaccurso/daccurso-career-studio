@@ -10,7 +10,7 @@ import AdminLogin from './pages/AdminLogin';
 import AdminPanel from './pages/AdminPanel';
 import BlogIndex from './pages/blog/index';
 import BlogPost from './pages/blog/BlogPost';
-import StorePage from './pages/Store';
+import Store from './pages/Store';
 import Navigation from './components/Navigation';
 import ScrollToTop from './components/ScrollToTop';
 import { AdminAuthProvider, useAdminAuth } from './contexts/AdminAuthContext';
@@ -50,7 +50,10 @@ function AppContent() {
         <Route path="/contact" element={<><Navigation /><ContactMe /></>} />
         <Route path="/blog" element={<><Navigation /><BlogIndex /></>} />
         <Route path="/blog/:slug" element={<><Navigation /><BlogPost /></>} />
-        <Route path="/store" element={<Store />} />
+        
+        {/* Store route - embedded Fourthwall store with navigation visible */}
+        <Route path="/store" element={<><Navigation /><Store /></>} />
+        
         <Route path="/admin-panel" element={<AdminRoute />} />
         <Route path="*" element={<><Navigation /><Home /></>} />
       </Routes>
