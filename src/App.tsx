@@ -10,13 +10,14 @@ import AdminLogin from './pages/AdminLogin';
 import AdminPanel from './pages/AdminPanel';
 import BlogIndex from './pages/blog/index';
 import BlogPost from './pages/blog/BlogPost';
+import StorePage from './pages/StorePage';
 import Navigation from './components/Navigation';
 import ScrollToTop from './components/ScrollToTop';
 import { AdminAuthProvider, useAdminAuth } from './contexts/AdminAuthContext';
 
 function AdminRoute() {
   const { isAdmin, loading } = useAdminAuth();
-
+  
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-100 flex items-center justify-center">
@@ -27,11 +28,11 @@ function AdminRoute() {
       </div>
     );
   }
-
+  
   if (!isAdmin) {
     return <AdminLogin onLoginSuccess={() => window.location.href = '/admin-panel'} />;
   }
-
+  
   return <AdminPanel />;
 }
 
@@ -47,6 +48,7 @@ function AppContent() {
         <Route path="/about" element={<><Navigation /><AboutMe /></>} />
         <Route path="/pricing" element={<><Navigation /><Pricing /></>} />
         <Route path="/contact" element={<><Navigation /><ContactMe /></>} />
+        <Route path="/store" element={<StorePage />} />
         <Route path="/blog" element={<><Navigation /><BlogIndex /></>} />
         <Route path="/blog/:slug" element={<><Navigation /><BlogPost /></>} />
         <Route path="/admin-panel" element={<AdminRoute />} />
