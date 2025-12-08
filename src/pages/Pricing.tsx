@@ -65,7 +65,7 @@ export default function Pricing() {
               ))}
             </ul>
             <Link
-              to="/contact"
+              to="/resume-services"
               className="w-full block bg-gray-100 text-gray-900 py-3 rounded-lg font-semibold hover:bg-gray-200 text-center"
             >
               Start Free
