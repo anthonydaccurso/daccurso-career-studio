@@ -3,5 +3,6 @@ Allow: /
 Disallow: /.env
 Disallow: /.git/
 Disallow: /admin
+Disallow: /
 
 Sitemap: https://daccursocareerstudio.com/sitemap.xml
